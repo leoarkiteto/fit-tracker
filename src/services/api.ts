@@ -69,6 +69,7 @@ interface ApiCompletedWorkout {
   id: string;
   workoutId: string;
   completedAt: string;
+  durationSeconds: number;
 }
 
 interface ApiWorkoutStats {
@@ -380,16 +381,21 @@ export const bioimpedanceApi = {
 
 // ============= Completed Workouts API =============
 
+export interface CompletedWorkoutRecord {
+  workoutId: string;
+  completedAt: string;
+  durationSeconds: number;
+}
+
 export const completedWorkoutsApi = {
-  getAll: async (
-    profileId: string
-  ): Promise<{ workoutId: string; completedAt: string }[]> => {
+  getAll: async (profileId: string): Promise<CompletedWorkoutRecord[]> => {
     const data = await fetchApi<ApiCompletedWorkout[]>(
       API_ENDPOINTS.completedWorkouts(profileId)
     );
     return data.map((c) => ({
       workoutId: c.workoutId,
       completedAt: c.completedAt,
+      durationSeconds: c.durationSeconds,
     }));
   },
 
@@ -401,18 +407,20 @@ export const completedWorkoutsApi = {
 
   complete: async (
     profileId: string,
-    workoutId: string
-  ): Promise<{ workoutId: string; completedAt: string }> => {
+    workoutId: string,
+    durationSeconds: number
+  ): Promise<CompletedWorkoutRecord> => {
     const data = await fetchApi<ApiCompletedWorkout>(
       API_ENDPOINTS.completedWorkouts(profileId),
       {
         method: "POST",
-        body: JSON.stringify({ workoutId }),
+        body: JSON.stringify({ workoutId, durationSeconds }),
       }
     );
     return {
       workoutId: data.workoutId,
       completedAt: data.completedAt,
+      durationSeconds: data.durationSeconds,
     };
   },
 

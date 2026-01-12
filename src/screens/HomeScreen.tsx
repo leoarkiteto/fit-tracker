@@ -31,11 +31,11 @@ export const HomeScreen: React.FC = () => {
     workoutsThisWeek,
     totalMinutesSpent,
     bioimpedanceHistory,
-    completeWorkout,
     isLoading,
     error,
     clearError,
     refreshData,
+    isWorkoutCompletedToday,
   } = useApp();
 
   const [refreshing, setRefreshing] = React.useState(false);
@@ -56,9 +56,6 @@ export const HomeScreen: React.FC = () => {
   const latestBioimpedance =
     bioimpedanceHistory.length > 0 ? bioimpedanceHistory[0] : null;
 
-  const handleStartWorkout = async (workoutId: string) => {
-    await completeWorkout(workoutId);
-  };
 
   // Loading state
   if (isLoading) {
@@ -168,7 +165,7 @@ export const HomeScreen: React.FC = () => {
                     workoutId: workout.id,
                   })
                 }
-                onStart={() => handleStartWorkout(workout.id)}
+                isCompletedToday={isWorkoutCompletedToday(workout.id)}
               />
             ))
           ) : (

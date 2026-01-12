@@ -5,7 +5,7 @@ import { TabNavigator } from "./TabNavigator";
 import {
   WorkoutFormScreen,
   WorkoutDetailScreen,
-  WorkoutSessionScreen,
+  ExerciseSessionScreen,
   BioimpedanceFormScreen,
   BioimpedanceHistoryScreen,
 } from "../screens";
@@ -32,8 +32,8 @@ export const RootNavigator: React.FC = () => {
       />
       <Stack.Screen name="WorkoutDetail" component={WorkoutDetailScreen} />
       <Stack.Screen
-        name="WorkoutSession"
-        component={WorkoutSessionScreen}
+        name="ExerciseSession"
+        component={ExerciseSessionScreen}
         options={{
           animation: "fade",
           gestureEnabled: false,

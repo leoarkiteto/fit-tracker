@@ -13,6 +13,7 @@ import {
   workoutsApi,
   bioimpedanceApi,
   completedWorkoutsApi,
+  CompletedWorkoutRecord,
 } from "../services";
 
 const PROFILE_ID_KEY = "@fittracker:profile_id";
@@ -30,7 +31,7 @@ interface AppContextType {
   ) => Promise<void>;
   updateWorkout: (workout: Workout) => Promise<void>;
   deleteWorkout: (id: string) => Promise<void>;
-  completeWorkout: (id: string) => Promise<void>;
+  completeWorkout: (id: string, durationSeconds: number) => Promise<void>;
 
   // Bioimpedance
   bioimpedanceHistory: BioimpedanceData[];
@@ -39,7 +40,8 @@ interface AppContextType {
   deleteBioimpedance: (id: string) => Promise<void>;
 
   // Completed workouts
-  completedWorkouts: { workoutId: string; completedAt: string }[];
+  completedWorkouts: CompletedWorkoutRecord[];
+  isWorkoutCompletedToday: (workoutId: string) => boolean;
 
   // Stats
   totalWorkoutsCompleted: number;
@@ -69,7 +71,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     BioimpedanceData[]
   >([]);
   const [completedWorkouts, setCompletedWorkouts] = useState<
-    { workoutId: string; completedAt: string }[]
+    CompletedWorkoutRecord[]
   >([]);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
@@ -223,12 +225,16 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     }
   };
 
-  const completeWorkout = async (id: string) => {
+  const completeWorkout = async (id: string, durationSeconds: number) => {
     if (!profileId) return;
 
     try {
       setError(null);
-      const completed = await completedWorkoutsApi.complete(profileId, id);
+      const completed = await completedWorkoutsApi.complete(
+        profileId,
+        id,
+        durationSeconds
+      );
       setCompletedWorkouts((prev) => [completed, ...prev]);
 
       // Update stats
@@ -240,6 +246,22 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
       throw err;
     }
   };
+
+  // Verifica se um treino foi completado hoje
+  const isWorkoutCompletedToday = useCallback(
+    (workoutId: string): boolean => {
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+
+      return completedWorkouts.some((cw) => {
+        if (cw.workoutId !== workoutId) return false;
+        const completedDate = new Date(cw.completedAt);
+        completedDate.setHours(0, 0, 0, 0);
+        return completedDate.getTime() === today.getTime();
+      });
+    },
+    [completedWorkouts]
+  );
 
   // Bioimpedance
   const addBioimpedance = async (data: Omit<BioimpedanceData, "id">) => {
@@ -302,6 +324,7 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         updateBioimpedance,
         deleteBioimpedance,
         completedWorkouts,
+        isWorkoutCompletedToday,
         totalWorkoutsCompleted: stats.totalWorkoutsCompleted,
         workoutsThisWeek: stats.workoutsThisWeek,
         totalMinutesSpent: stats.totalMinutesSpent,

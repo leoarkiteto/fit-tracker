@@ -12,10 +12,10 @@ const getBaseUrl = () => {
     // Desenvolvimento
     if (Platform.OS === "android") {
       // Android Emulator: 10.0.2.2 aponta para localhost da máquina host
-      return "http://10.0.2.2:5000";
+      return "http://10.0.2.2:5001";
     }
     // iOS Simulator ou dispositivo: use localhost ou IP da máquina
-    return "http://localhost:5000";
+    return "http://localhost:5001";
   }
   // Produção - altere para sua URL de produção
   return "https://api.fittracker.com";

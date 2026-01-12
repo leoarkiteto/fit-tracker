@@ -7,8 +7,6 @@ namespace FitTracker.Api.Endpoints;
 
 public static class CompletedWorkoutEndpoints
 {
-    private const int EstimatedMinutesPerWorkout = 45;
-
     public static void MapCompletedWorkoutEndpoints(this WebApplication app)
     {
         var group = app.MapGroup("/api/profiles/{profileId:guid}/completed-workouts")
@@ -53,6 +51,7 @@ public static class CompletedWorkoutEndpoints
                         WorkoutId = request.WorkoutId,
                         UserProfileId = profileId,
                         CompletedAt = DateTime.UtcNow,
+                        DurationSeconds = request.DurationSeconds,
                     };
 
                     db.CompletedWorkouts.Add(completed);
@@ -81,10 +80,14 @@ public static class CompletedWorkoutEndpoints
                     var weekAgo = DateTime.UtcNow.AddDays(-7);
                     var workoutsThisWeek = completed.Count(c => c.CompletedAt >= weekAgo);
 
+                    // Calcular minutos totais baseado na duração real
+                    var totalSeconds = completed.Sum(c => c.DurationSeconds);
+                    var totalMinutes = totalSeconds / 60;
+
                     var stats = new WorkoutStatsDto(
                         TotalWorkoutsCompleted: completed.Count,
                         WorkoutsThisWeek: workoutsThisWeek,
-                        TotalMinutesSpent: completed.Count * EstimatedMinutesPerWorkout
+                        TotalMinutesSpent: totalMinutes
                     );
 
                     return Results.Ok(stats);
@@ -118,5 +121,5 @@ public static class CompletedWorkoutEndpoints
     }
 
     private static CompletedWorkoutDto ToDto(CompletedWorkout completed) =>
-        new(completed.Id, completed.WorkoutId, completed.CompletedAt);
+        new(completed.Id, completed.WorkoutId, completed.CompletedAt, completed.DurationSeconds);
 }

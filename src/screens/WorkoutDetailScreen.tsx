@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState, useEffect, useRef } from "react";
 import {
   View,
   Text,
@@ -10,14 +10,30 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
+import {
+  useNavigation,
+  useRoute,
+  RouteProp,
+  useFocusEffect,
+} from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { useApp } from "../context/AppContext";
-import { Button, ExerciseCard, Card } from "../components";
+import { Button, Card } from "../components";
 import { colors, spacing, borderRadius, typography } from "../theme";
 import { RootStackParamList } from "../navigation/types";
-import { WORKOUT_GOALS, DAYS_OF_WEEK } from "../types";
+import { WORKOUT_GOALS, DAYS_OF_WEEK, MUSCLE_GROUPS, Exercise } from "../types";
+
+const formatDuration = (seconds: number): string => {
+  const mins = Math.floor(seconds / 60);
+  const secs = seconds % 60;
+  if (mins >= 60) {
+    const hours = Math.floor(mins / 60);
+    const remainMins = mins % 60;
+    return `${hours}h ${remainMins}min`;
+  }
+  return `${mins}min ${secs}s`;
+};
 
 type WorkoutDetailScreenNavigationProp =
   NativeStackNavigationProp<RootStackParamList>;
@@ -29,9 +45,62 @@ type WorkoutDetailScreenRouteProp = RouteProp<
 export const WorkoutDetailScreen: React.FC = () => {
   const navigation = useNavigation<WorkoutDetailScreenNavigationProp>();
   const route = useRoute<WorkoutDetailScreenRouteProp>();
-  const { workouts, deleteWorkout } = useApp();
+  const { workouts, deleteWorkout, completeWorkout, isWorkoutCompletedToday } =
+    useApp();
 
   const workout = workouts.find((w) => w.id === route.params.workoutId);
+  const alreadyCompletedToday = workout
+    ? isWorkoutCompletedToday(workout.id)
+    : false;
+
+  // Estados do treino
+  const [isWorkoutStarted, setIsWorkoutStarted] = useState(false);
+  const [workoutTimer, setWorkoutTimer] = useState(0);
+  const [completedExercises, setCompletedExercises] = useState<Set<string>>(
+    new Set()
+  );
+  const [lastExerciseId, setLastExerciseId] = useState<string | null>(null);
+
+  const timerRef = useRef<ReturnType<typeof setInterval> | null>(null);
+
+  // Timer do treino
+  useEffect(() => {
+    if (isWorkoutStarted) {
+      timerRef.current = setInterval(() => {
+        setWorkoutTimer((prev) => prev + 1);
+      }, 1000);
+    }
+
+    return () => {
+      if (timerRef.current) {
+        clearInterval(timerRef.current);
+      }
+    };
+  }, [isWorkoutStarted]);
+
+  // Detectar quando volta da tela de exercício e marcar como concluído
+  useFocusEffect(
+    React.useCallback(() => {
+      if (lastExerciseId && isWorkoutStarted) {
+        setCompletedExercises((prev) => new Set([...prev, lastExerciseId]));
+        setLastExerciseId(null);
+
+        // Verificar se todos os exercícios foram concluídos
+        if (workout) {
+          const newCompleted = new Set([...completedExercises, lastExerciseId]);
+          if (newCompleted.size === workout.exercises.length) {
+            handleWorkoutComplete();
+          }
+        }
+      }
+    }, [lastExerciseId, isWorkoutStarted])
+  );
+
+  const formatTime = (seconds: number): string => {
+    const mins = Math.floor(seconds / 60);
+    const secs = seconds % 60;
+    return `${mins.toString().padStart(2, "0")}:${secs.toString().padStart(2, "0")}`;
+  };
 
   if (!workout) {
     return (
@@ -72,6 +141,10 @@ export const WorkoutDetailScreen: React.FC = () => {
       .join(", ");
   };
 
+  const getMuscleGroupInfo = (muscleGroup: string) => {
+    return MUSCLE_GROUPS.find((g) => g.key === muscleGroup);
+  };
+
   const totalExercises = workout.exercises.length;
   const estimatedMinutes = totalExercises * 5;
   const totalSets = workout.exercises.reduce((acc, e) => acc + e.sets, 0);
@@ -90,12 +163,80 @@ export const WorkoutDetailScreen: React.FC = () => {
             navigation.goBack();
           },
         },
-      ],
+      ]
     );
   };
 
-  const handleStart = () => {
-    navigation.navigate("WorkoutSession", { workoutId: workout.id });
+  const handleStartWorkout = () => {
+    setIsWorkoutStarted(true);
+    setWorkoutTimer(0);
+    setCompletedExercises(new Set());
+  };
+
+  const handleExercisePress = (exercise: Exercise) => {
+    if (!isWorkoutStarted) {
+      Alert.alert(
+        "Treino não iniciado",
+        "Clique em 'Iniciar Treino' para começar."
+      );
+      return;
+    }
+
+    if (completedExercises.has(exercise.id)) {
+      return; // Exercício já concluído
+    }
+
+    setLastExerciseId(exercise.id);
+    navigation.navigate("ExerciseSession", {
+      workoutId: workout.id,
+      exerciseId: exercise.id,
+    });
+  };
+
+  const handleWorkoutComplete = async () => {
+    if (timerRef.current) {
+      clearInterval(timerRef.current);
+    }
+
+    const duration = workoutTimer;
+    await completeWorkout(workout.id, duration);
+
+    Alert.alert(
+      "🎉 Treino Concluído!",
+      `Parabéns! Você completou o treino em ${formatDuration(duration)}.`,
+      [
+        {
+          text: "Finalizar",
+          onPress: () => {
+            setIsWorkoutStarted(false);
+            setCompletedExercises(new Set());
+            setWorkoutTimer(0);
+          },
+        },
+      ]
+    );
+  };
+
+  const handleStopWorkout = () => {
+    Alert.alert(
+      "Parar Treino",
+      "Tem certeza que deseja parar o treino? O progresso será perdido.",
+      [
+        { text: "Continuar", style: "cancel" },
+        {
+          text: "Parar",
+          style: "destructive",
+          onPress: () => {
+            if (timerRef.current) {
+              clearInterval(timerRef.current);
+            }
+            setIsWorkoutStarted(false);
+            setCompletedExercises(new Set());
+            setWorkoutTimer(0);
+          },
+        },
+      ]
+    );
   };
 
   return (
@@ -115,19 +256,31 @@ export const WorkoutDetailScreen: React.FC = () => {
             <Ionicons name="arrow-back" size={24} color={colors.white} />
           </TouchableOpacity>
 
-          <View style={styles.heroActions}>
-            <TouchableOpacity
-              onPress={() =>
-                navigation.navigate("WorkoutForm", { workoutId: workout.id })
-              }
-              style={styles.heroAction}
-            >
-              <Ionicons name="pencil" size={20} color={colors.white} />
-            </TouchableOpacity>
-            <TouchableOpacity onPress={handleDelete} style={styles.heroAction}>
-              <Ionicons name="trash" size={20} color={colors.white} />
-            </TouchableOpacity>
-          </View>
+          {!isWorkoutStarted && (
+            <View style={styles.heroActions}>
+              <TouchableOpacity
+                onPress={() =>
+                  navigation.navigate("WorkoutForm", { workoutId: workout.id })
+                }
+                style={styles.heroAction}
+              >
+                <Ionicons name="pencil" size={20} color={colors.white} />
+              </TouchableOpacity>
+              <TouchableOpacity onPress={handleDelete} style={styles.heroAction}>
+                <Ionicons name="trash" size={20} color={colors.white} />
+              </TouchableOpacity>
+            </View>
+          )}
+
+          {/* Timer Badge quando treino está ativo */}
+          {isWorkoutStarted && (
+            <View style={styles.activeTimerBadge}>
+              <Ionicons name="time" size={18} color={colors.white} />
+              <Text style={styles.activeTimerText}>
+                {formatTime(workoutTimer)}
+              </Text>
+            </View>
+          )}
 
           <View style={styles.heroContent}>
             <View style={styles.goalBadge}>
@@ -146,7 +299,11 @@ export const WorkoutDetailScreen: React.FC = () => {
                 size={20}
                 color="rgba(255,255,255,0.8)"
               />
-              <Text style={styles.heroStatValue}>{totalExercises}</Text>
+              <Text style={styles.heroStatValue}>
+                {isWorkoutStarted
+                  ? `${completedExercises.size}/${totalExercises}`
+                  : totalExercises}
+              </Text>
               <Text style={styles.heroStatLabel}>Exercícios</Text>
             </View>
             <View style={styles.heroStatDivider} />
@@ -172,41 +329,138 @@ export const WorkoutDetailScreen: React.FC = () => {
           </View>
         </LinearGradient>
 
-        {/* Schedule */}
-        <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Programação</Text>
-          <Card style={styles.scheduleCard}>
-            <Ionicons
-              name="calendar-outline"
-              size={24}
-              color={getGradientColors()[0]}
-            />
-            <View style={styles.scheduleContent}>
-              <Text style={styles.scheduleLabel}>Dias da Semana</Text>
-              <Text style={styles.scheduleDays}>{getDaysLabel()}</Text>
-            </View>
-          </Card>
-        </View>
+        {/* Schedule - oculto quando treino está ativo */}
+        {!isWorkoutStarted && (
+          <View style={styles.section}>
+            <Text style={styles.sectionTitle}>Programação</Text>
+            <Card style={styles.scheduleCard}>
+              <Ionicons
+                name="calendar-outline"
+                size={24}
+                color={getGradientColors()[0]}
+              />
+              <View style={styles.scheduleContent}>
+                <Text style={styles.scheduleLabel}>Dias da Semana</Text>
+                <Text style={styles.scheduleDays}>{getDaysLabel()}</Text>
+              </View>
+            </Card>
+          </View>
+        )}
 
         {/* Exercises */}
         <View style={styles.section}>
-          <Text style={styles.sectionTitle}>Exercícios</Text>
-          {workout.exercises.map((exercise, index) => (
-            <ExerciseCard key={exercise.id} exercise={exercise} index={index} />
-          ))}
+          <Text style={styles.sectionTitle}>
+            {isWorkoutStarted
+              ? "Toque em um exercício para iniciar"
+              : "Exercícios"}
+          </Text>
+
+          {workout.exercises.map((exercise, index) => {
+            const isCompleted = completedExercises.has(exercise.id);
+            const muscleGroup = getMuscleGroupInfo(exercise.muscleGroup);
+
+            return (
+              <TouchableOpacity
+                key={exercise.id}
+                style={[
+                  styles.exerciseCard,
+                  isCompleted && styles.exerciseCardCompleted,
+                ]}
+                onPress={() => handleExercisePress(exercise)}
+                disabled={isCompleted}
+                activeOpacity={isWorkoutStarted ? 0.7 : 1}
+              >
+                <View
+                  style={[
+                    styles.exerciseNumber,
+                    { backgroundColor: muscleGroup?.color || colors.primary },
+                    isCompleted && styles.exerciseNumberCompleted,
+                  ]}
+                >
+                  {isCompleted ? (
+                    <Ionicons
+                      name="checkmark"
+                      size={20}
+                      color={colors.white}
+                    />
+                  ) : (
+                    <Text style={styles.exerciseNumberText}>{index + 1}</Text>
+                  )}
+                </View>
+
+                <View style={styles.exerciseInfo}>
+                  <Text
+                    style={[
+                      styles.exerciseName,
+                      isCompleted && styles.exerciseNameCompleted,
+                    ]}
+                  >
+                    {exercise.name}
+                  </Text>
+                  <Text style={styles.exerciseDetails}>
+                    {muscleGroup?.label} • {exercise.sets}×{exercise.reps}
+                    {exercise.weight ? ` • ${exercise.weight}kg` : ""}
+                  </Text>
+                </View>
+
+                {isWorkoutStarted && !isCompleted && (
+                  <Ionicons
+                    name="chevron-forward"
+                    size={20}
+                    color={colors.textLight}
+                  />
+                )}
+
+                {isCompleted && (
+                  <View style={styles.completedBadge}>
+                    <Text style={styles.completedBadgeText}>Concluído</Text>
+                  </View>
+                )}
+              </TouchableOpacity>
+            );
+          })}
         </View>
 
         <View style={{ height: 100 }} />
       </ScrollView>
 
-      {/* Start Button */}
+      {/* Footer Button */}
       <View style={styles.footer}>
-        <Button
-          title="Iniciar Treino"
-          onPress={handleStart}
-          fullWidth
-          icon={<Ionicons name="play" size={20} color={colors.white} />}
-        />
+        {alreadyCompletedToday && !isWorkoutStarted ? (
+          <View style={styles.completedTodayBanner}>
+            <Ionicons name="checkmark-circle" size={24} color={colors.success} />
+            <Text style={styles.completedTodayText}>
+              Treino já concluído hoje!
+            </Text>
+          </View>
+        ) : isWorkoutStarted ? (
+          <View style={styles.activeFooter}>
+            <TouchableOpacity
+              style={styles.stopButton}
+              onPress={handleStopWorkout}
+            >
+              <Ionicons name="stop" size={20} color={colors.error} />
+              <Text style={styles.stopButtonText}>Parar</Text>
+            </TouchableOpacity>
+
+            {completedExercises.size === totalExercises && (
+              <TouchableOpacity
+                style={styles.finishButton}
+                onPress={handleWorkoutComplete}
+              >
+                <Ionicons name="trophy" size={20} color={colors.white} />
+                <Text style={styles.finishButtonText}>Concluir Treino</Text>
+              </TouchableOpacity>
+            )}
+          </View>
+        ) : (
+          <Button
+            title="Iniciar Treino"
+            onPress={handleStartWorkout}
+            fullWidth
+            icon={<Ionicons name="play" size={20} color={colors.white} />}
+          />
+        )}
       </View>
     </SafeAreaView>
   );
@@ -256,6 +510,23 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "rgba(255,255,255,0.2)",
     borderRadius: borderRadius.full,
+  },
+  activeTimerBadge: {
+    position: "absolute",
+    top: spacing.md,
+    right: spacing.lg,
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+    backgroundColor: "rgba(0,0,0,0.3)",
+    paddingHorizontal: spacing.md,
+    paddingVertical: spacing.sm,
+    borderRadius: borderRadius.full,
+  },
+  activeTimerText: {
+    fontSize: typography.md,
+    fontWeight: typography.bold,
+    color: colors.white,
   },
   heroContent: {
     marginTop: spacing.lg,
@@ -337,6 +608,62 @@ const styles = StyleSheet.create({
     color: colors.textPrimary,
     marginTop: spacing.xs,
   },
+  exerciseCard: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: colors.surface,
+    borderRadius: borderRadius.lg,
+    padding: spacing.md,
+    marginBottom: spacing.sm,
+  },
+  exerciseCardCompleted: {
+    opacity: 0.7,
+    backgroundColor: `${colors.success}10`,
+  },
+  exerciseNumber: {
+    width: 40,
+    height: 40,
+    borderRadius: borderRadius.full,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  exerciseNumberCompleted: {
+    backgroundColor: colors.success,
+  },
+  exerciseNumberText: {
+    fontSize: typography.md,
+    fontWeight: typography.bold,
+    color: colors.white,
+  },
+  exerciseInfo: {
+    flex: 1,
+    marginLeft: spacing.md,
+  },
+  exerciseName: {
+    fontSize: typography.md,
+    fontWeight: typography.semibold,
+    color: colors.textPrimary,
+  },
+  exerciseNameCompleted: {
+    textDecorationLine: "line-through",
+    color: colors.textSecondary,
+  },
+  exerciseDetails: {
+    fontSize: typography.sm,
+    color: colors.textSecondary,
+    marginTop: spacing.xs,
+  },
+  completedBadge: {
+    backgroundColor: colors.success,
+    paddingHorizontal: spacing.sm,
+    paddingVertical: spacing.xs,
+    borderRadius: borderRadius.full,
+  },
+  completedBadgeText: {
+    fontSize: typography.xs,
+    fontWeight: typography.semibold,
+    color: colors.white,
+  },
   footer: {
     position: "absolute",
     bottom: 0,
@@ -346,5 +673,58 @@ const styles = StyleSheet.create({
     backgroundColor: colors.surface,
     borderTopWidth: 1,
     borderTopColor: colors.border,
+  },
+  activeFooter: {
+    flexDirection: "row",
+    gap: spacing.md,
+  },
+  stopButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: spacing.sm,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderRadius: borderRadius.lg,
+    borderWidth: 2,
+    borderColor: colors.error,
+  },
+  stopButtonText: {
+    fontSize: typography.md,
+    fontWeight: typography.semibold,
+    color: colors.error,
+  },
+  finishButton: {
+    flex: 1,
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: spacing.sm,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    borderRadius: borderRadius.lg,
+    backgroundColor: colors.success,
+  },
+  finishButtonText: {
+    fontSize: typography.md,
+    fontWeight: typography.semibold,
+    color: colors.white,
+  },
+  completedTodayBanner: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    gap: spacing.sm,
+    paddingVertical: spacing.md,
+    paddingHorizontal: spacing.lg,
+    backgroundColor: `${colors.success}15`,
+    borderRadius: borderRadius.lg,
+    borderWidth: 1,
+    borderColor: colors.success,
+  },
+  completedTodayText: {
+    fontSize: typography.md,
+    fontWeight: typography.semibold,
+    color: colors.success,
   },
 });

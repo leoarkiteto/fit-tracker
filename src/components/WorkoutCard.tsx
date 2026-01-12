@@ -10,6 +10,7 @@ interface WorkoutCardProps {
   onPress: () => void;
   onStart?: () => void;
   variant?: "default" | "compact" | "featured";
+  isCompletedToday?: boolean;
 }
 
 export const WorkoutCard: React.FC<WorkoutCardProps> = ({
@@ -17,6 +18,7 @@ export const WorkoutCard: React.FC<WorkoutCardProps> = ({
   onPress,
   onStart,
   variant = "default",
+  isCompletedToday = false,
 }) => {
   const goal = WORKOUT_GOALS.find((g) => g.key === workout.goal);
 
@@ -74,15 +76,22 @@ export const WorkoutCard: React.FC<WorkoutCardProps> = ({
                 <Text style={styles.featuredStatText}>{getDaysLabel()}</Text>
               </View>
             </View>
-            {onStart && (
-              <TouchableOpacity onPress={onStart} style={styles.startButton}>
-                <Text style={styles.startButtonText}>Iniciar</Text>
-                <Ionicons
-                  name="play"
-                  size={18}
-                  color={getGradientColors()[0]}
-                />
-              </TouchableOpacity>
+            {isCompletedToday ? (
+              <View style={styles.completedButton}>
+                <Ionicons name="checkmark-circle" size={18} color={colors.success} />
+                <Text style={styles.completedButtonText}>Concluído</Text>
+              </View>
+            ) : (
+              onStart && (
+                <TouchableOpacity onPress={onStart} style={styles.startButton}>
+                  <Text style={styles.startButtonText}>Iniciar</Text>
+                  <Ionicons
+                    name="play"
+                    size={18}
+                    color={getGradientColors()[0]}
+                  />
+                </TouchableOpacity>
+              )
             )}
           </View>
           <View style={styles.featuredImageContainer}>
@@ -171,15 +180,22 @@ export const WorkoutCard: React.FC<WorkoutCardProps> = ({
 
       <View style={styles.footer}>
         <Text style={styles.daysText}>{getDaysLabel()}</Text>
-        {onStart && (
-          <TouchableOpacity onPress={onStart} style={styles.playButton}>
-            <LinearGradient
-              colors={getGradientColors()}
-              style={styles.playButtonGradient}
-            >
-              <Ionicons name="play" size={16} color={colors.white} />
-            </LinearGradient>
-          </TouchableOpacity>
+        {isCompletedToday ? (
+          <View style={styles.completedBadge}>
+            <Ionicons name="checkmark-circle" size={16} color={colors.success} />
+            <Text style={styles.completedBadgeText}>Concluído</Text>
+          </View>
+        ) : (
+          onStart && (
+            <TouchableOpacity onPress={onStart} style={styles.playButton}>
+              <LinearGradient
+                colors={getGradientColors()}
+                style={styles.playButtonGradient}
+              >
+                <Ionicons name="play" size={16} color={colors.white} />
+              </LinearGradient>
+            </TouchableOpacity>
+          )
         )}
       </View>
 
@@ -324,6 +340,36 @@ const styles = StyleSheet.create({
   startButtonText: {
     fontSize: typography.md,
     fontWeight: typography.semibold,
+  },
+  completedButton: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: colors.white,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.lg,
+    borderRadius: borderRadius.full,
+    gap: spacing.xs,
+    alignSelf: "flex-start",
+  },
+  completedButtonText: {
+    fontSize: typography.md,
+    fontWeight: typography.semibold,
+    color: colors.success,
+  },
+  completedBadge: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: spacing.xs,
+    backgroundColor: colors.white,
+    paddingVertical: spacing.xs,
+    paddingHorizontal: spacing.sm,
+    borderRadius: borderRadius.full,
+  },
+  completedBadgeText: {
+    fontSize: typography.xs,
+    fontWeight: typography.semibold,
+    color: colors.success,
   },
   featuredImageContainer: {
     position: "absolute",

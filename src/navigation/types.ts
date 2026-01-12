@@ -10,7 +10,7 @@ export type RootStackParamList = {
   MainTabs: NavigatorScreenParams<TabParamList>;
   WorkoutForm: { workoutId?: string };
   WorkoutDetail: { workoutId: string };
-  WorkoutSession: { workoutId: string };
+  ExerciseSession: { workoutId: string; exerciseId: string };
   BioimpedanceForm: { bioimpedanceId?: string };
   BioimpedanceHistory: undefined;
   Profile: undefined;
