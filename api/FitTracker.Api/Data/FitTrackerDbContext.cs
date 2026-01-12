@@ -8,6 +8,7 @@ public class FitTrackerDbContext : DbContext
     public FitTrackerDbContext(DbContextOptions<FitTrackerDbContext> options)
         : base(options) { }
 
+    public DbSet<User> Users => Set<User>();
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
     public DbSet<Workout> Workouts => Set<Workout>();
     public DbSet<Exercise> Exercises => Set<Exercise>();
@@ -17,6 +18,22 @@ public class FitTrackerDbContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         base.OnModelCreating(modelBuilder);
+
+        // User
+        modelBuilder.Entity<User>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Email).IsRequired().HasMaxLength(256);
+            entity.HasIndex(e => e.Email).IsUnique();
+            entity.Property(e => e.PasswordHash).IsRequired();
+            entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
+
+            entity
+                .HasOne(e => e.UserProfile)
+                .WithOne()
+                .HasForeignKey<User>(e => e.UserProfileId)
+                .OnDelete(DeleteBehavior.SetNull);
+        });
 
         // UserProfile
         modelBuilder.Entity<UserProfile>(entity =>

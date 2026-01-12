@@ -1,6 +1,10 @@
+using System.Text;
 using FitTracker.Api.Data;
 using FitTracker.Api.Endpoints;
+using FitTracker.Api.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -14,6 +18,38 @@ builder.Services.AddDbContext<FitTrackerDbContext>(options =>
             ?? "Data Source=fittracker.db"
     )
 );
+
+// Services
+builder.Services.AddScoped<IPasswordService, PasswordService>();
+builder.Services.AddScoped<IJwtService, JwtService>();
+
+// JWT Authentication
+var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "FitTrackerSuperSecretKey2024!@#$%^&*()";
+var jwtIssuer = builder.Configuration["Jwt:Issuer"] ?? "FitTracker";
+var jwtAudience = builder.Configuration["Jwt:Audience"] ?? "FitTrackerApp";
+
+builder
+    .Services.AddAuthentication(options =>
+    {
+        options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+    })
+    .AddJwtBearer(options =>
+    {
+        options.TokenValidationParameters = new TokenValidationParameters
+        {
+            ValidateIssuerSigningKey = true,
+            IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSecret)),
+            ValidateIssuer = true,
+            ValidIssuer = jwtIssuer,
+            ValidateAudience = true,
+            ValidAudience = jwtAudience,
+            ValidateLifetime = true,
+            ClockSkew = TimeSpan.Zero,
+        };
+    });
+
+builder.Services.AddAuthorization();
 
 // CORS - Permitir acesso do app mobile
 builder.Services.AddCors(options =>
@@ -41,6 +77,37 @@ builder.Services.AddSwaggerGen(options =>
                 "API para o aplicativo FitTracker - Gerenciamento de treinos e bioimpedância",
         }
     );
+
+    // Configurar Swagger para suportar JWT
+    options.AddSecurityDefinition(
+        "Bearer",
+        new OpenApiSecurityScheme
+        {
+            Name = "Authorization",
+            Type = SecuritySchemeType.ApiKey,
+            Scheme = "Bearer",
+            BearerFormat = "JWT",
+            In = ParameterLocation.Header,
+            Description = "Insira o token JWT no formato: Bearer {seu_token}",
+        }
+    );
+
+    options.AddSecurityRequirement(
+        new OpenApiSecurityRequirement
+        {
+            {
+                new OpenApiSecurityScheme
+                {
+                    Reference = new OpenApiReference
+                    {
+                        Type = ReferenceType.SecurityScheme,
+                        Id = "Bearer",
+                    },
+                },
+                Array.Empty<string>()
+            },
+        }
+    );
 });
 
 var app = builder.Build();
@@ -56,6 +123,10 @@ app.UseSwaggerUI(options =>
     options.RoutePrefix = string.Empty; // Swagger na raiz
 });
 
+// Authentication & Authorization
+app.UseAuthentication();
+app.UseAuthorization();
+
 // Garantir que o banco de dados existe e aplicar migrations
 using (var scope = app.Services.CreateScope())
 {
@@ -64,6 +135,7 @@ using (var scope = app.Services.CreateScope())
 }
 
 // Map Minimal API endpoints
+app.MapAuthEndpoints();
 app.MapProfileEndpoints();
 app.MapWorkoutEndpoints();
 app.MapBioimpedanceEndpoints();

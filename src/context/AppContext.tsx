@@ -6,7 +6,6 @@ import React, {
   ReactNode,
   useCallback,
 } from "react";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import { Workout, BioimpedanceData, UserProfile } from "../types";
 import {
   profileApi,
@@ -15,8 +14,7 @@ import {
   completedWorkoutsApi,
   CompletedWorkoutRecord,
 } from "../services";
-
-const PROFILE_ID_KEY = "@fittracker:profile_id";
+import { useAuth } from "./AuthContext";
 
 interface AppContextType {
   // Profile
@@ -64,6 +62,8 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
+  const { user, isAuthenticated } = useAuth();
+  
   const [profileId, setProfileId] = useState<string | null>(null);
   const [profile, setProfile] = useState<UserProfile>({ name: "Atleta" });
   const [workouts, setWorkouts] = useState<Workout[]>([]);
@@ -85,34 +85,36 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
 
   const clearError = useCallback(() => setError(null), []);
 
-  // Initialize: Load profile ID from storage and fetch data
+  // Initialize: Load profile data when user is authenticated
   useEffect(() => {
-    initializeApp();
-  }, []);
+    if (isAuthenticated && user?.profileId) {
+      initializeApp(user.profileId);
+    } else {
+      // Reset state when user logs out
+      setProfileId(null);
+      setProfile({ name: "Atleta" });
+      setWorkouts([]);
+      setBioimpedanceHistory([]);
+      setCompletedWorkouts([]);
+      setStats({ totalWorkoutsCompleted: 0, workoutsThisWeek: 0, totalMinutesSpent: 0 });
+      setIsLoading(false);
+    }
+  }, [isAuthenticated, user?.profileId]);
 
-  const initializeApp = async () => {
+  const initializeApp = async (authProfileId: string) => {
     try {
       setIsLoading(true);
       setError(null);
 
-      // Try to get stored profile ID
-      const storedProfileId = await AsyncStorage.getItem(PROFILE_ID_KEY);
-
-      if (storedProfileId) {
-        // Profile exists, load it
-        try {
-          const loadedProfile = await profileApi.getById(storedProfileId);
-          setProfileId(storedProfileId);
-          setProfile(loadedProfile);
-          await loadProfileData(storedProfileId);
-        } catch {
-          // Profile might have been deleted from server, create new one
-          console.log("Stored profile not found, creating new one");
-          await createNewProfile();
-        }
-      } else {
-        // No stored profile, create a new one
-        await createNewProfile();
+      // Load profile from authenticated user
+      try {
+        const loadedProfile = await profileApi.getById(authProfileId);
+        setProfileId(authProfileId);
+        setProfile(loadedProfile);
+        await loadProfileData(authProfileId);
+      } catch (err) {
+        console.error("Error loading profile:", err);
+        setError("Erro ao carregar perfil. Tente novamente.");
       }
     } catch (err) {
       console.error("Error initializing app:", err);
@@ -122,13 +124,6 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
     } finally {
       setIsLoading(false);
     }
-  };
-
-  const createNewProfile = async () => {
-    const newProfile = await profileApi.create({ name: "Atleta" });
-    await AsyncStorage.setItem(PROFILE_ID_KEY, newProfile.id);
-    setProfileId(newProfile.id);
-    setProfile(newProfile);
   };
 
   const loadProfileData = async (id: string) => {

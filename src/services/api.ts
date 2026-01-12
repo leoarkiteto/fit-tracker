@@ -1,4 +1,7 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { API_BASE_URL, API_ENDPOINTS } from "./config";
+
+const TOKEN_KEY = "@fittracker:token";
 import {
   Workout,
   BioimpedanceData,
@@ -78,19 +81,63 @@ interface ApiWorkoutStats {
   totalMinutesSpent: number;
 }
 
+// Tipos de autenticação
+interface ApiUser {
+  id: string;
+  email: string;
+  name: string;
+  profileId: string | null;
+}
+
+interface ApiAuthResponse {
+  token: string;
+  expiresAt: string;
+  user: ApiUser;
+}
+
+export interface AuthUser {
+  id: string;
+  email: string;
+  name: string;
+  profileId: string | null;
+}
+
+export interface AuthResult {
+  token: string;
+  expiresAt: Date;
+  user: AuthUser;
+}
+
+// Token storage
+let currentToken: string | null = null;
+
+export const setAuthToken = (token: string | null) => {
+  currentToken = token;
+};
+
+export const getAuthToken = () => currentToken;
+
 // Helper para fazer requisições
 async function fetchApi<T>(
   endpoint: string,
-  options?: RequestInit
+  options?: RequestInit,
+  requireAuth: boolean = true
 ): Promise<T> {
   const url = `${API_BASE_URL}${endpoint}`;
 
+  const headers: HeadersInit = {
+    "Content-Type": "application/json",
+    ...options?.headers,
+  };
+
+  // Adicionar token de autenticação se disponível
+  if (requireAuth && currentToken) {
+    (headers as Record<string, string>)["Authorization"] = `Bearer ${currentToken}`;
+  }
+
   const response = await fetch(url, {
     ...options,
-    headers: {
-      "Content-Type": "application/json",
-      ...options?.headers,
-    },
+    headers,
   });
 
   if (!response.ok) {
@@ -436,7 +483,95 @@ export const completedWorkoutsApi = {
 export const healthApi = {
   check: async (): Promise<{ status: string; timestamp: string }> => {
     return fetchApi<{ status: string; timestamp: string }>(
-      API_ENDPOINTS.health
+      API_ENDPOINTS.health,
+      undefined,
+      false
     );
+  },
+};
+
+// ============= Auth API =============
+
+export const authApi = {
+  register: async (
+    email: string,
+    password: string,
+    name: string
+  ): Promise<AuthResult> => {
+    const data = await fetchApi<ApiAuthResponse>(
+      "/api/auth/register",
+      {
+        method: "POST",
+        body: JSON.stringify({ email, password, name }),
+      },
+      false
+    );
+    return {
+      token: data.token,
+      expiresAt: new Date(data.expiresAt),
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        profileId: data.user.profileId,
+      },
+    };
+  },
+
+  login: async (email: string, password: string): Promise<AuthResult> => {
+    const data = await fetchApi<ApiAuthResponse>(
+      "/api/auth/login",
+      {
+        method: "POST",
+        body: JSON.stringify({ email, password }),
+      },
+      false
+    );
+    return {
+      token: data.token,
+      expiresAt: new Date(data.expiresAt),
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        profileId: data.user.profileId,
+      },
+    };
+  },
+
+  getCurrentUser: async (): Promise<AuthUser> => {
+    const data = await fetchApi<ApiUser>("/api/auth/me");
+    return {
+      id: data.id,
+      email: data.email,
+      name: data.name,
+      profileId: data.profileId,
+    };
+  },
+
+  refreshToken: async (): Promise<AuthResult> => {
+    const data = await fetchApi<ApiAuthResponse>("/api/auth/refresh", {
+      method: "POST",
+    });
+    return {
+      token: data.token,
+      expiresAt: new Date(data.expiresAt),
+      user: {
+        id: data.user.id,
+        email: data.user.email,
+        name: data.user.name,
+        profileId: data.user.profileId,
+      },
+    };
+  },
+
+  changePassword: async (
+    currentPassword: string,
+    newPassword: string
+  ): Promise<void> => {
+    await fetchApi("/api/auth/change-password", {
+      method: "POST",
+      body: JSON.stringify({ currentPassword, newPassword }),
+    });
   },
 };

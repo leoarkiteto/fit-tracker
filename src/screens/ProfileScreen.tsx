@@ -14,6 +14,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { useApp } from "../context/AppContext";
+import { useAuth } from "../context/AuthContext";
 import { Input, Card } from "../components";
 import { colors, spacing, borderRadius, typography } from "../theme";
 import { RootStackParamList } from "../navigation/types";
@@ -23,6 +24,7 @@ type ProfileScreenNavigationProp =
 
 export const ProfileScreen: React.FC = () => {
   const navigation = useNavigation<ProfileScreenNavigationProp>();
+  const { signOut, user } = useAuth();
   const {
     profile,
     updateProfile,
@@ -31,6 +33,23 @@ export const ProfileScreen: React.FC = () => {
     workouts,
     bioimpedanceHistory,
   } = useApp();
+
+  const handleLogout = () => {
+    Alert.alert(
+      "Sair",
+      "Tem certeza que deseja sair da sua conta?",
+      [
+        { text: "Cancelar", style: "cancel" },
+        {
+          text: "Sair",
+          style: "destructive",
+          onPress: async () => {
+            await signOut();
+          },
+        },
+      ]
+    );
+  };
 
   const [isEditing, setIsEditing] = useState(false);
   const [name, setName] = useState(profile.name);
@@ -267,6 +286,25 @@ export const ProfileScreen: React.FC = () => {
               icon="stats-chart-outline"
               title="Estatísticas"
               subtitle={`${totalMinutesSpent} minutos de treino`}
+            />
+          </Card>
+        </View>
+
+        {/* Account */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Conta</Text>
+          <Card padding="none">
+            <MenuItem
+              icon="person-circle-outline"
+              title="Email"
+              subtitle={user?.email || ""}
+            />
+            <View style={styles.menuDivider} />
+            <MenuItem
+              icon="log-out-outline"
+              title="Sair da Conta"
+              onPress={handleLogout}
+              color={colors.error}
             />
           </Card>
         </View>

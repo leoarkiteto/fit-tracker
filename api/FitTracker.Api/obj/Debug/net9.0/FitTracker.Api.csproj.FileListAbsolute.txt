@@ -154,3 +154,11 @@
 /Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.pdb
 /Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.genruntimeconfig.cache
 /Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/obj/Debug/net9.0/ref/FitTracker.Api.dll
+/Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll
+/Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Abstractions.dll
+/Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll
+/Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Logging.dll
+/Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll
+/Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll
+/Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll
+/Users/leofranca/Documents/Demo/ReactNative/FitTracker/api/FitTracker.Api/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll

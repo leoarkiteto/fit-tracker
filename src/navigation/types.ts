@@ -1,5 +1,10 @@
 import { NavigatorScreenParams } from "@react-navigation/native";
 
+export type AuthStackParamList = {
+  SignIn: undefined;
+  SignUp: undefined;
+};
+
 export type TabParamList = {
   Home: undefined;
   Workouts: undefined;
