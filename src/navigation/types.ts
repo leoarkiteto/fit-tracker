@@ -1,0 +1,23 @@
+import { NavigatorScreenParams } from "@react-navigation/native";
+
+export type TabParamList = {
+  Home: undefined;
+  Workouts: undefined;
+  Profile: undefined;
+};
+
+export type RootStackParamList = {
+  MainTabs: NavigatorScreenParams<TabParamList>;
+  WorkoutForm: { workoutId?: string };
+  WorkoutDetail: { workoutId: string };
+  WorkoutSession: { workoutId: string };
+  BioimpedanceForm: { bioimpedanceId?: string };
+  BioimpedanceHistory: undefined;
+  Profile: undefined;
+};
+
+declare global {
+  namespace ReactNavigation {
+    interface RootParamList extends RootStackParamList {}
+  }
+}
