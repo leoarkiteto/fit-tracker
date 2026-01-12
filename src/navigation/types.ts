@@ -19,6 +19,7 @@ export type RootStackParamList = {
   BioimpedanceForm: { bioimpedanceId?: string };
   BioimpedanceHistory: undefined;
   Profile: undefined;
+  ChangePassword: undefined;
 };
 
 declare global {

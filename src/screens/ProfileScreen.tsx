@@ -301,6 +301,12 @@ export const ProfileScreen: React.FC = () => {
             />
             <View style={styles.menuDivider} />
             <MenuItem
+              icon="key-outline"
+              title="Alterar Senha"
+              onPress={() => navigation.navigate("ChangePassword")}
+            />
+            <View style={styles.menuDivider} />
+            <MenuItem
               icon="log-out-outline"
               title="Sair da Conta"
               onPress={handleLogout}

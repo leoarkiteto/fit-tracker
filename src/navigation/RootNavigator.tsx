@@ -8,6 +8,7 @@ import {
   ExerciseSessionScreen,
   BioimpedanceFormScreen,
   BioimpedanceHistoryScreen,
+  ChangePasswordScreen,
 } from "../screens";
 import { RootStackParamList } from "./types";
 
@@ -50,6 +51,10 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen
         name="BioimpedanceHistory"
         component={BioimpedanceHistoryScreen}
+      />
+      <Stack.Screen
+        name="ChangePassword"
+        component={ChangePasswordScreen}
       />
     </Stack.Navigator>
   );

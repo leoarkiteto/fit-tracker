@@ -8,3 +8,4 @@ export { BioimpedanceHistoryScreen } from "./BioimpedanceHistoryScreen";
 export { ProfileScreen } from "./ProfileScreen";
 export { SignInScreen } from "./SignInScreen";
 export { SignUpScreen } from "./SignUpScreen";
+export { ChangePasswordScreen } from "./ChangePasswordScreen";
