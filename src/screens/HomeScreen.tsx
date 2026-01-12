@@ -15,7 +15,7 @@ import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { useApp } from "../context/AppContext";
-import { WorkoutCard, Card } from "../components";
+import { WorkoutCard, Card, WorkoutCalendar } from "../components";
 import { colors, spacing, borderRadius, typography, shadows } from "../theme";
 import { RootStackParamList } from "../navigation/types";
 import { DAYS_OF_WEEK, DayOfWeek } from "../types";
@@ -31,6 +31,7 @@ export const HomeScreen: React.FC = () => {
     workoutsThisWeek,
     totalMinutesSpent,
     bioimpedanceHistory,
+    completedWorkouts,
     isLoading,
     error,
     clearError,
@@ -188,6 +189,14 @@ export const HomeScreen: React.FC = () => {
           )}
         </View>
 
+        {/* Workout Calendar */}
+        <View style={styles.section}>
+          <Text style={styles.sectionTitle}>Calendário de Treinos</Text>
+          <WorkoutCalendar
+            completedDates={completedWorkouts.map((cw) => cw.completedAt)}
+          />
+        </View>
+
         {/* Bioimpedance Summary */}
         {latestBioimpedance && (
           <View style={styles.section}>
@@ -297,7 +306,8 @@ export const HomeScreen: React.FC = () => {
           </View>
         </View>
 
-        <View style={{ height: spacing.xxl }} />
+        {/* Espaço extra para não ser coberto pelo navbar */}
+        <View style={{ height: 100 }} />
       </ScrollView>
     </SafeAreaView>
   );

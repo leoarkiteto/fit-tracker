@@ -5,3 +5,4 @@ export { DaySelector } from "./DaySelector";
 export { GoalSelector } from "./GoalSelector";
 export { ExerciseCard } from "./ExerciseCard";
 export { WorkoutCard } from "./WorkoutCard";
+export { WorkoutCalendar } from "./WorkoutCalendar";

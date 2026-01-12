@@ -178,15 +178,16 @@ const styles = StyleSheet.create({
     justifyContent: "center",
   },
   filtersContainer: {
-    maxHeight: 50,
+    flexGrow: 0,
   },
   filtersContent: {
     paddingHorizontal: spacing.lg,
-    gap: spacing.sm,
+    paddingVertical: spacing.xs,
+    alignItems: "center",
   },
   filterChip: {
     paddingHorizontal: spacing.md,
-    paddingVertical: spacing.sm,
+    paddingVertical: 6,
     borderRadius: borderRadius.full,
     backgroundColor: colors.surfaceSecondary,
     marginRight: spacing.sm,
