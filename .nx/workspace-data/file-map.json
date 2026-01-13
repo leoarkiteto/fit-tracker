@@ -1,0 +1,1208 @@
+{
+  "version": "6.0",
+  "nxVersion": "19.8.14",
+  "deps": {
+    "nx": "^19.0.0",
+    "typescript": "^5.3.0"
+  },
+  "pathMappings": {
+    "@fittracker/types": [
+      "libs/types/src/index.ts"
+    ],
+    "@fittracker/api-client": [
+      "libs/api-client/src/index.ts"
+    ]
+  },
+  "nxJsonPlugins": [],
+  "fileMap": {
+    "projectFileMap": {
+      "@fittracker/types": [
+        {
+          "file": "libs/types/package.json",
+          "hash": "16106144009834639864"
+        },
+        {
+          "file": "libs/types/src/index.ts",
+          "hash": "14831989039106246289"
+        },
+        {
+          "file": "libs/types/tsconfig.json",
+          "hash": "9501378180348247537"
+        }
+      ],
+      "@fittracker/api-client": [
+        {
+          "file": "libs/api-client/package.json",
+          "hash": "3934002478998152781",
+          "deps": [
+            "@fittracker/types"
+          ]
+        },
+        {
+          "file": "libs/api-client/src/config.ts",
+          "hash": "14180405061965450713"
+        },
+        {
+          "file": "libs/api-client/src/index.ts",
+          "hash": "5186448017039716948"
+        },
+        {
+          "file": "libs/api-client/tsconfig.json",
+          "hash": "9501378180348247537"
+        }
+      ],
+      "@fittracker/mobile": [
+        {
+          "file": "apps/mobile/App.tsx",
+          "hash": "16426948005269054926"
+        },
+        {
+          "file": "apps/mobile/app.json",
+          "hash": "7443507092603116430"
+        },
+        {
+          "file": "apps/mobile/assets/adaptive-icon.png",
+          "hash": "16102135492459408350"
+        },
+        {
+          "file": "apps/mobile/assets/favicon.png",
+          "hash": "10556792184362654649"
+        },
+        {
+          "file": "apps/mobile/assets/icon.png",
+          "hash": "14252482080276080187"
+        },
+        {
+          "file": "apps/mobile/assets/splash-icon.png",
+          "hash": "16102135492459408350"
+        },
+        {
+          "file": "apps/mobile/package.json",
+          "hash": "14031207230010091678",
+          "deps": [
+            "npm:@babel/core",
+            "npm:@types/react@18.3.27",
+            "npm:typescript",
+            "npm:@react-native-async-storage/async-storage@1.23.1",
+            "npm:@react-navigation/bottom-tabs",
+            "npm:@react-navigation/native",
+            "npm:@react-navigation/native-stack",
+            "npm:expo@52.0.48",
+            "npm:expo-linear-gradient@14.0.2",
+            "npm:expo-status-bar@2.0.1",
+            "npm:react@18.3.1",
+            "npm:react-native@0.76.3",
+            "npm:react-native-gesture-handler@2.20.2",
+            "npm:react-native-reanimated",
+            "npm:react-native-safe-area-context@4.12.0",
+            "npm:react-native-screens@4.1.0"
+          ]
+        },
+        {
+          "file": "apps/mobile/src/components/Button.tsx",
+          "hash": "12668341257227271043"
+        },
+        {
+          "file": "apps/mobile/src/components/Card.tsx",
+          "hash": "13628098741489559686"
+        },
+        {
+          "file": "apps/mobile/src/components/DaySelector.tsx",
+          "hash": "9559900463162097640"
+        },
+        {
+          "file": "apps/mobile/src/components/ExerciseCard.tsx",
+          "hash": "18050593830447225098"
+        },
+        {
+          "file": "apps/mobile/src/components/GoalSelector.tsx",
+          "hash": "5284586508935410583"
+        },
+        {
+          "file": "apps/mobile/src/components/Input.tsx",
+          "hash": "11480080839434624378"
+        },
+        {
+          "file": "apps/mobile/src/components/WorkoutCalendar.tsx",
+          "hash": "3923436539608401837"
+        },
+        {
+          "file": "apps/mobile/src/components/WorkoutCard.tsx",
+          "hash": "13168551041348780705"
+        },
+        {
+          "file": "apps/mobile/src/components/index.ts",
+          "hash": "14638640917005087439"
+        },
+        {
+          "file": "apps/mobile/src/context/AppContext.tsx",
+          "hash": "9762658921972421272"
+        },
+        {
+          "file": "apps/mobile/src/context/AuthContext.tsx",
+          "hash": "572773017197961665"
+        },
+        {
+          "file": "apps/mobile/src/navigation/AppNavigator.tsx",
+          "hash": "6129581365598278915"
+        },
+        {
+          "file": "apps/mobile/src/navigation/AuthNavigator.tsx",
+          "hash": "7633993394671982221"
+        },
+        {
+          "file": "apps/mobile/src/navigation/RootNavigator.tsx",
+          "hash": "7714904830586714838"
+        },
+        {
+          "file": "apps/mobile/src/navigation/TabNavigator.tsx",
+          "hash": "15516057959205804544"
+        },
+        {
+          "file": "apps/mobile/src/navigation/index.ts",
+          "hash": "17031847875772590729"
+        },
+        {
+          "file": "apps/mobile/src/navigation/types.ts",
+          "hash": "17580490532006467521"
+        },
+        {
+          "file": "apps/mobile/src/screens/BioimpedanceFormScreen.tsx",
+          "hash": "17772152049097569244"
+        },
+        {
+          "file": "apps/mobile/src/screens/BioimpedanceHistoryScreen.tsx",
+          "hash": "5483119439577539762"
+        },
+        {
+          "file": "apps/mobile/src/screens/ChangePasswordScreen.tsx",
+          "hash": "2257799130237860665"
+        },
+        {
+          "file": "apps/mobile/src/screens/ExerciseSessionScreen.tsx",
+          "hash": "12539619864692267616"
+        },
+        {
+          "file": "apps/mobile/src/screens/HomeScreen.tsx",
+          "hash": "8587098065887328710"
+        },
+        {
+          "file": "apps/mobile/src/screens/ProfileScreen.tsx",
+          "hash": "12002648660198383176"
+        },
+        {
+          "file": "apps/mobile/src/screens/SignInScreen.tsx",
+          "hash": "3005435426406248289"
+        },
+        {
+          "file": "apps/mobile/src/screens/SignUpScreen.tsx",
+          "hash": "6977171745376373710"
+        },
+        {
+          "file": "apps/mobile/src/screens/WorkoutDetailScreen.tsx",
+          "hash": "11210586058280113821"
+        },
+        {
+          "file": "apps/mobile/src/screens/WorkoutFormScreen.tsx",
+          "hash": "16144656949919735285"
+        },
+        {
+          "file": "apps/mobile/src/screens/WorkoutsScreen.tsx",
+          "hash": "238705618084341865"
+        },
+        {
+          "file": "apps/mobile/src/screens/index.ts",
+          "hash": "12372539383393702342"
+        },
+        {
+          "file": "apps/mobile/src/services/api.ts",
+          "hash": "10002501135326265882"
+        },
+        {
+          "file": "apps/mobile/src/services/config.ts",
+          "hash": "11197464098547556459"
+        },
+        {
+          "file": "apps/mobile/src/services/index.ts",
+          "hash": "5118160116177040539"
+        },
+        {
+          "file": "apps/mobile/src/storage/index.ts",
+          "hash": "9317860813820040364"
+        },
+        {
+          "file": "apps/mobile/src/theme/index.ts",
+          "hash": "13658020671006374567"
+        },
+        {
+          "file": "apps/mobile/src/types/index.ts",
+          "hash": "3257678548441904378"
+        },
+        {
+          "file": "apps/mobile/src/utils/generateId.ts",
+          "hash": "4288911531624461069"
+        },
+        {
+          "file": "apps/mobile/src/utils/index.ts",
+          "hash": "4511010900469161521"
+        },
+        {
+          "file": "apps/mobile/tsconfig.json",
+          "hash": "17379051556933425667"
+        }
+      ],
+      "@fittracker/pwa": [
+        {
+          "file": "apps/pwa/README.md",
+          "hash": "17666092979264172380"
+        },
+        {
+          "file": "apps/pwa/next-env.d.ts",
+          "hash": "13904763933831424769"
+        },
+        {
+          "file": "apps/pwa/next.config.js",
+          "hash": "15498623831160674055"
+        },
+        {
+          "file": "apps/pwa/package.json",
+          "hash": "12134494441811403184"
+        },
+        {
+          "file": "apps/pwa/postcss.config.js",
+          "hash": "8055263870272897227"
+        },
+        {
+          "file": "apps/pwa/public/icons/icon.svg",
+          "hash": "6847053489590578521"
+        },
+        {
+          "file": "apps/pwa/public/manifest.json",
+          "hash": "4296572489378634126"
+        },
+        {
+          "file": "apps/pwa/public/sw.js",
+          "hash": "9248009124019606397"
+        },
+        {
+          "file": "apps/pwa/src/app/(app)/bioimpedance/new/page.tsx",
+          "hash": "15226463946613599408"
+        },
+        {
+          "file": "apps/pwa/src/app/(app)/bioimpedance/page.tsx",
+          "hash": "11148881743268599292"
+        },
+        {
+          "file": "apps/pwa/src/app/(app)/dashboard/page.tsx",
+          "hash": "17711842341060120117"
+        },
+        {
+          "file": "apps/pwa/src/app/(app)/layout.tsx",
+          "hash": "7910987295159761036"
+        },
+        {
+          "file": "apps/pwa/src/app/(app)/profile/page.tsx",
+          "hash": "4312386372686078937"
+        },
+        {
+          "file": "apps/pwa/src/app/(app)/workouts/[id]/edit/page.tsx",
+          "hash": "10953372059973324509"
+        },
+        {
+          "file": "apps/pwa/src/app/(app)/workouts/[id]/page.tsx",
+          "hash": "10451340236116065726"
+        },
+        {
+          "file": "apps/pwa/src/app/(app)/workouts/new/page.tsx",
+          "hash": "6646546703215635827"
+        },
+        {
+          "file": "apps/pwa/src/app/(app)/workouts/page.tsx",
+          "hash": "16967736046484659901"
+        },
+        {
+          "file": "apps/pwa/src/app/auth/change-password/page.tsx",
+          "hash": "4533296866917310424"
+        },
+        {
+          "file": "apps/pwa/src/app/auth/signin/page.tsx",
+          "hash": "15209934735742343495"
+        },
+        {
+          "file": "apps/pwa/src/app/auth/signup/page.tsx",
+          "hash": "13405991494919218799"
+        },
+        {
+          "file": "apps/pwa/src/app/globals.css",
+          "hash": "11795205693803417410"
+        },
+        {
+          "file": "apps/pwa/src/app/layout.tsx",
+          "hash": "6932602386578555545"
+        },
+        {
+          "file": "apps/pwa/src/app/page.tsx",
+          "hash": "8626572422786106884"
+        },
+        {
+          "file": "apps/pwa/src/components/ServiceWorkerRegistration.tsx",
+          "hash": "5480686514339362571"
+        },
+        {
+          "file": "apps/pwa/src/components/layout/Navbar.tsx",
+          "hash": "14228260170181573082"
+        },
+        {
+          "file": "apps/pwa/src/components/ui/Button.tsx",
+          "hash": "17836140621913005025"
+        },
+        {
+          "file": "apps/pwa/src/components/ui/Card.tsx",
+          "hash": "2956612905277145005"
+        },
+        {
+          "file": "apps/pwa/src/components/ui/Input.tsx",
+          "hash": "13436137927755762379"
+        },
+        {
+          "file": "apps/pwa/src/components/ui/index.ts",
+          "hash": "12819065696138921691"
+        },
+        {
+          "file": "apps/pwa/src/lib/auth-context.tsx",
+          "hash": "11690383369796829382"
+        },
+        {
+          "file": "apps/pwa/src/lib/register-sw.ts",
+          "hash": "8025559839852364460"
+        },
+        {
+          "file": "apps/pwa/src/types/react-override.d.ts",
+          "hash": "11154970420712199826"
+        },
+        {
+          "file": "apps/pwa/tailwind.config.js",
+          "hash": "7409095334724560743"
+        },
+        {
+          "file": "apps/pwa/tsconfig.json",
+          "hash": "8533214429643140077"
+        }
+      ]
+    },
+    "nonProjectFiles": [
+      {
+        "file": ".gitignore",
+        "hash": "10530348721903624668"
+      },
+      {
+        "file": "FitTracker.sln",
+        "hash": "16458895530023830972"
+      },
+      {
+        "file": "PRODUCT_VISION.md",
+        "hash": "9866424616524152904"
+      },
+      {
+        "file": "README.md",
+        "hash": "17045590436784688791"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Auth/AuthDtos.cs",
+        "hash": "7568210903434848923"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Auth/AuthEndpoints.cs",
+        "hash": "5677322698590247251"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Auth/JwtService.cs",
+        "hash": "2707911702947139983"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Auth/PasswordService.cs",
+        "hash": "5709912440116951396"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Auth/User.cs",
+        "hash": "1183585640728385442"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Bioimpedance/BioimpedanceData.cs",
+        "hash": "13036069321571683046"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Bioimpedance/BioimpedanceDtos.cs",
+        "hash": "13583330459595278524"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Bioimpedance/BioimpedanceEndpoints.cs",
+        "hash": "16786360502970278875"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Profiles/ProfileDtos.cs",
+        "hash": "17378391203978983793"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Profiles/ProfileEndpoints.cs",
+        "hash": "17927877690030783212"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Profiles/UserProfile.cs",
+        "hash": "9035900045634199408"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Workouts/CompletedWorkout.cs",
+        "hash": "16257022892134298644"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Workouts/CompletedWorkoutEndpoints.cs",
+        "hash": "18427363965281757960"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Workouts/Exercise.cs",
+        "hash": "13884292300711488935"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Workouts/Workout.cs",
+        "hash": "7312704097029495334"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Workouts/WorkoutDtos.cs",
+        "hash": "9514084271998656288"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Features/Workouts/WorkoutEndpoints.cs",
+        "hash": "8857953132225886118"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/FitTracker.Api.csproj",
+        "hash": "7399003155398196195"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/FitTracker.Api.http",
+        "hash": "12117271877192542859"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Program.cs",
+        "hash": "13074488244007824522"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Properties/launchSettings.json",
+        "hash": "9940918873103816595"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/Shared/Data/FitTrackerDbContext.cs",
+        "hash": "9301370618042401184"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/appsettings.Development.json",
+        "hash": "457677627026679127"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/appsettings.json",
+        "hash": "8863699529163816923"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/FitTracker.Api",
+        "hash": "5820909315502854253"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/FitTracker.Api.deps.json",
+        "hash": "9298713488290793106"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/FitTracker.Api.dll",
+        "hash": "5893277995216604008"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/FitTracker.Api.pdb",
+        "hash": "630566657914859930"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/FitTracker.Api.runtimeconfig.json",
+        "hash": "14522051661840974542"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/FitTracker.Api.staticwebassets.endpoints.json",
+        "hash": "9221313036531420426"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Humanizer.dll",
+        "hash": "10286719546707737588"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.AspNetCore.Authentication.JwtBearer.dll",
+        "hash": "799031433016077065"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.AspNetCore.OpenApi.dll",
+        "hash": "1583546474169689548"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Bcl.AsyncInterfaces.dll",
+        "hash": "5195600976413374837"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Build.Locator.dll",
+        "hash": "11309196795355646300"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.CodeAnalysis.CSharp.Workspaces.dll",
+        "hash": "18007591666734366398"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.CodeAnalysis.CSharp.dll",
+        "hash": "5641011119092254684"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.dll",
+        "hash": "3485677979941406427"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.CodeAnalysis.Workspaces.MSBuild.dll",
+        "hash": "3335893723653789604"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.CodeAnalysis.Workspaces.dll",
+        "hash": "16662556184253477254"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.CodeAnalysis.dll",
+        "hash": "4289752591993465135"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Data.Sqlite.dll",
+        "hash": "11504115905127563755"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Abstractions.dll",
+        "hash": "11805684302393889523"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Design.dll",
+        "hash": "9285532019696044651"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Relational.dll",
+        "hash": "12686378026240676866"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.Sqlite.dll",
+        "hash": "2969720797295889249"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.EntityFrameworkCore.dll",
+        "hash": "3317901735952872832"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Extensions.Caching.Abstractions.dll",
+        "hash": "1702967233712684426"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Extensions.Caching.Memory.dll",
+        "hash": "18430171765369418685"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Extensions.Configuration.Abstractions.dll",
+        "hash": "2687577693363476349"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Extensions.DependencyInjection.Abstractions.dll",
+        "hash": "6291918656630731712"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Extensions.DependencyInjection.dll",
+        "hash": "11827244233466989803"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Extensions.DependencyModel.dll",
+        "hash": "8515201680218600054"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Extensions.Logging.Abstractions.dll",
+        "hash": "13991318597775093236"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Extensions.Logging.dll",
+        "hash": "4798904650646972547"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Extensions.Options.dll",
+        "hash": "10655955432900671309"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.Extensions.Primitives.dll",
+        "hash": "51309457338647521"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Abstractions.dll",
+        "hash": "3504043573974836911"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.JsonWebTokens.dll",
+        "hash": "13577600701435945223"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Logging.dll",
+        "hash": "10298443243368175202"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.OpenIdConnect.dll",
+        "hash": "2652222461546212649"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Protocols.dll",
+        "hash": "9120748132411579998"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.IdentityModel.Tokens.dll",
+        "hash": "2605099304521048396"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Microsoft.OpenApi.dll",
+        "hash": "3419054495318764699"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Mono.TextTemplating.dll",
+        "hash": "14357950311120099560"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/SQLitePCLRaw.batteries_v2.dll",
+        "hash": "4470541519530467607"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/SQLitePCLRaw.core.dll",
+        "hash": "1609254713664100137"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/SQLitePCLRaw.provider.e_sqlite3.dll",
+        "hash": "13202394396315725911"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Swashbuckle.AspNetCore.Swagger.dll",
+        "hash": "12436442956758082069"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerGen.dll",
+        "hash": "1518785438561781038"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/Swashbuckle.AspNetCore.SwaggerUI.dll",
+        "hash": "2846741193340226422"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/System.CodeDom.dll",
+        "hash": "10673895160472681057"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/System.Composition.AttributedModel.dll",
+        "hash": "2469248446014439946"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/System.Composition.Convention.dll",
+        "hash": "9731389886678387496"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/System.Composition.Hosting.dll",
+        "hash": "10129574384487368033"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/System.Composition.Runtime.dll",
+        "hash": "397791330733916705"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/System.Composition.TypedParts.dll",
+        "hash": "7051120912698095498"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/System.IdentityModel.Tokens.Jwt.dll",
+        "hash": "6632521811668484909"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/appsettings.Development.json",
+        "hash": "457677627026679127"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/appsettings.json",
+        "hash": "8863699529163816923"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "3868731961509737444"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "14837963063554139356"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "15588291757202753251"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "4568393275560012071"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/cs/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "9143969971503301160"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "5557860181732855918"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "7526839094288990343"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "4213922190632373435"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "10592874387225178718"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/de/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "14460767856805550628"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/es/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "3497064572141487401"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/es/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "14745751519188755048"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/es/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "8419253657499955977"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/es/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "9560635546166005083"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/es/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "16933251649422610169"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "18360790875613678338"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "4567447205354564884"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "710782532982732293"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "8894978070705600422"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/fr/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "7309822354736474950"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/it/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "17245855182232422953"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/it/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "8722349177923109160"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/it/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "1301174550791606664"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/it/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "545475562021819765"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/it/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "658768435688080138"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "16900717067868723908"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "3503650447499579570"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "9306728346015920334"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "10744063920085946820"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ja/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "7660431724951388508"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "12617086666464443226"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "4409451995703414824"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "9970091027229373703"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "8498466825471691205"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ko/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "2135372433435796124"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "5278474559235693424"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "15882188816723665361"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "8910738117540180004"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "12356232976003747763"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/pl/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "4254217884435085451"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "15897376915459814316"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "10443346628265440603"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "6632501663564710652"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "200278764844285055"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/pt-BR/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "2062119233254693881"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "3055460325776390364"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "2257189392475232927"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "9690715586503620216"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "1983726326903311013"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/ru/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "15665949084092013222"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/browser-wasm/nativeassets/net9.0/e_sqlite3.a",
+        "hash": "1382514684251150519"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-arm/native/libe_sqlite3.so",
+        "hash": "2377135146219400003"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-arm64/native/libe_sqlite3.so",
+        "hash": "14082595730222199345"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-armel/native/libe_sqlite3.so",
+        "hash": "5341017975371921850"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-mips64/native/libe_sqlite3.so",
+        "hash": "6830784525045922427"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-musl-arm/native/libe_sqlite3.so",
+        "hash": "17133098881956191480"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-musl-arm64/native/libe_sqlite3.so",
+        "hash": "14697650492296709894"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-musl-s390x/native/libe_sqlite3.so",
+        "hash": "18446517960251359313"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-musl-x64/native/libe_sqlite3.so",
+        "hash": "5652917725496675477"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-ppc64le/native/libe_sqlite3.so",
+        "hash": "13792376670237011222"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-s390x/native/libe_sqlite3.so",
+        "hash": "15262820871306542477"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-x64/native/libe_sqlite3.so",
+        "hash": "12884911781100300192"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/linux-x86/native/libe_sqlite3.so",
+        "hash": "15783183957145487845"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/maccatalyst-arm64/native/libe_sqlite3.dylib",
+        "hash": "5659204605473924189"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/maccatalyst-x64/native/libe_sqlite3.dylib",
+        "hash": "529660448590863603"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/osx-arm64/native/libe_sqlite3.dylib",
+        "hash": "18329420677911569577"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/osx-x64/native/libe_sqlite3.dylib",
+        "hash": "7201295549745029023"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/win-arm/native/e_sqlite3.dll",
+        "hash": "6984910839259389352"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/win-arm64/native/e_sqlite3.dll",
+        "hash": "6876630733095775753"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/win-x64/native/e_sqlite3.dll",
+        "hash": "6932951086881762699"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/runtimes/win-x86/native/e_sqlite3.dll",
+        "hash": "7732879456825633897"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "12337643380188320459"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "8108408105671252648"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "15976269601895592805"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "6467357470661895888"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/tr/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "2500557883476973783"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "2925764314343105824"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "8953492073864774495"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "13414673121106035102"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "5786693701127954966"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/zh-Hans/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "5873808384626659693"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.Workspaces.resources.dll",
+        "hash": "15601398526278767340"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.CSharp.resources.dll",
+        "hash": "4870465018191153886"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.MSBuild.BuildHost.resources.dll",
+        "hash": "8294418271564863713"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.Workspaces.resources.dll",
+        "hash": "4472707632910687855"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/bin/Debug/net9.0/zh-Hant/Microsoft.CodeAnalysis.resources.dll",
+        "hash": "2050647829841455306"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/fittracker.db",
+        "hash": "13869685873775441211"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/.NETCoreApp,Version=v9.0.AssemblyAttributes.cs",
+        "hash": "5533519361619761589"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTrack.F45EDA73.Up2Date",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.AssemblyInfo.cs",
+        "hash": "8140131913688917070"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.AssemblyInfoInputs.cache",
+        "hash": "11774437816180601931"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.GeneratedMSBuildEditorConfig.editorconfig",
+        "hash": "16977505220346909180"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.GlobalUsings.g.cs",
+        "hash": "9761602080853808482"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.MvcApplicationPartsAssemblyInfo.cache",
+        "hash": "3244421341483603138"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.MvcApplicationPartsAssemblyInfo.cs",
+        "hash": "2270827803056642813"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.assets.cache",
+        "hash": "3168860367781430971"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.csproj.AssemblyReference.cache",
+        "hash": "6777093421129125133"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.csproj.CoreCompileInputs.cache",
+        "hash": "1119948713810198230"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.csproj.FileListAbsolute.txt",
+        "hash": "10137680913062226096"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.dll",
+        "hash": "5893277995216604008"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.genruntimeconfig.cache",
+        "hash": "8238327624621455012"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/FitTracker.Api.pdb",
+        "hash": "630566657914859930"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/apphost",
+        "hash": "5820909315502854253"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/ref/FitTracker.Api.dll",
+        "hash": "10766325123587579666"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/refint/FitTracker.Api.dll",
+        "hash": "10766325123587579666"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/rjsmcshtml.dswa.cache.json",
+        "hash": "6217472668454273977"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/rjsmrazor.dswa.cache.json",
+        "hash": "4958361872103389213"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/rpswa.dswa.cache.json",
+        "hash": "16120011902792100765"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/staticwebassets.build.endpoints.json",
+        "hash": "9221313036531420426"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/staticwebassets.build.json",
+        "hash": "10744748940837806966"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/Debug/net9.0/staticwebassets.build.json.cache",
+        "hash": "10193051835977295978"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/FitTracker.Api.csproj.nuget.dgspec.json",
+        "hash": "13439476440656052542"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/FitTracker.Api.csproj.nuget.g.props",
+        "hash": "18211835606923597518"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/FitTracker.Api.csproj.nuget.g.targets",
+        "hash": "16609657899371308910"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/project.assets.json",
+        "hash": "12915778519754535707"
+      },
+      {
+        "file": "apps/api/FitTracker.Api/obj/project.nuget.cache",
+        "hash": "14033156116909519199"
+      },
+      {
+        "file": "nx.json",
+        "hash": "14258829062579641501"
+      },
+      {
+        "file": "package.json",
+        "hash": "14584360045777759339"
+      },
+      {
+        "file": "tsconfig.base.json",
+        "hash": "677780243673711889"
+      }
+    ]
+  }
+}

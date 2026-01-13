@@ -1,6 +1,6 @@
 # 💪 FitTracker
 
-A mobile workout management application built with **React Native** and **ASP.NET Core Web API** backend.
+A workout management application built as a **Monorepo** with **React Native** mobile app, **Next.js PWA**, and **ASP.NET Core Web API** backend.
 
 ## 📱 Overview
 
@@ -12,95 +12,134 @@ FitTracker allows users to:
 
 The product differentiator is the **use of Artificial Intelligence through AI Agents**, offered as premium features via subscription.
 
-## 🏗️ Architecture - Vertical Slice
+## 🏗️ Architecture - Monorepo with Vertical Slice
 
-The project uses **Vertical Slice Architecture**, where each feature is organized in an isolated and self-contained manner. This facilitates maintenance, testing, and adding new features (especially AI Agents).
+The project uses a **Monorepo structure** with shared libraries and **Vertical Slice Architecture** for the backend.
+
+### Project Structure
+
+```
+fittracker/
+├── apps/
+│   ├── mobile/                 # React Native (Expo)
+│   │   ├── src/
+│   │   │   ├── components/
+│   │   │   ├── context/
+│   │   │   ├── navigation/
+│   │   │   ├── screens/
+│   │   │   └── ...
+│   │   ├── App.tsx
+│   │   └── package.json
+│   │
+│   ├── pwa/                    # Next.js PWA
+│   │   ├── src/
+│   │   │   ├── app/           # App Router
+│   │   │   ├── components/
+│   │   │   └── lib/
+│   │   ├── public/
+│   │   └── package.json
+│   │
+│   └── api/                    # ASP.NET Core
+│       └── FitTracker.Api/
+│           ├── Features/
+│           │   ├── Auth/
+│           │   ├── Profiles/
+│           │   ├── Workouts/
+│           │   ├── Bioimpedance/
+│           │   └── AI/        # Future (Premium)
+│           ├── Shared/
+│           └── Program.cs
+│
+├── libs/
+│   ├── types/                  # Shared TypeScript types
+│   │   └── src/index.ts
+│   │
+│   └── api-client/             # Shared API service layer
+│       └── src/
+│           ├── index.ts
+│           └── config.ts
+│
+├── nx.json                     # Nx configuration
+├── package.json                # Workspaces config
+├── tsconfig.base.json          # Shared TypeScript config
+├── PRODUCT_VISION.md
+└── README.md
+```
+
+### Shared Libraries
+
+| Library | Purpose |
+|---------|---------|
+| `@fittracker/types` | Shared TypeScript interfaces (Workout, Exercise, UserProfile, etc.) |
+| `@fittracker/api-client` | Platform-agnostic API service layer (works in React Native and Next.js) |
 
 ### Backend (API) - Vertical Slice
 
 ```
-api/FitTracker.Api/
-├── Features/                         # 🎯 Each feature is a "vertical slice"
-│   ├── Auth/                         # Authentication
-│   │   ├── User.cs                   # Model
-│   │   ├── AuthDtos.cs               # DTOs
-│   │   ├── AuthEndpoints.cs          # Endpoints
-│   │   ├── JwtService.cs             # JWT Service
-│   │   └── PasswordService.cs        # Password Service
-│   │
-│   ├── Profiles/                     # User profiles
-│   │   ├── UserProfile.cs
-│   │   ├── ProfileDtos.cs
-│   │   └── ProfileEndpoints.cs
-│   │
-│   ├── Workouts/                     # Workouts and exercises
-│   │   ├── Workout.cs
-│   │   ├── Exercise.cs
-│   │   ├── CompletedWorkout.cs
-│   │   ├── WorkoutDtos.cs
-│   │   ├── WorkoutEndpoints.cs
-│   │   └── CompletedWorkoutEndpoints.cs
-│   │
-│   ├── Bioimpedance/                 # Bioimpedance
-│   │   ├── BioimpedanceData.cs
-│   │   ├── BioimpedanceDtos.cs
-│   │   └── BioimpedanceEndpoints.cs
-│   │
-│   └── AI/                           # 🧠 Future (Premium)
-│       ├── Coach/                    # Virtual Coach Agent
-│       ├── Progress/                 # Analyst Agent
-│       ├── Bioimpedance/             # Bioimpedance Agent
-│       ├── Prevention/               # Prevention Agent
-│       └── Planning/                 # Planning Agent
-│
-├── Shared/                           # Shared code
-│   └── Data/
-│       └── FitTrackerDbContext.cs
-│
-└── Program.cs                        # Configuration and mapping
+apps/api/FitTracker.Api/
+├── Features/                    # 🎯 Each feature is a "vertical slice"
+│   ├── Auth/
+│   ├── Profiles/
+│   ├── Workouts/
+│   ├── Bioimpedance/
+│   └── AI/                      # 🧠 Future (Premium)
+├── Shared/
+└── Program.cs
 ```
 
-### Frontend (React Native) - Current
-
-```
-src/
-├── components/               # Reusable components
-├── context/                  # Contexts (Auth, App)
-├── navigation/               # Navigation
-├── screens/                  # App screens
-├── services/                 # API client
-├── theme/                    # Global styles
-├── types/                    # TypeScript types
-└── utils/                    # Utilities
-```
-
-### Benefits of Vertical Slice Architecture
+### Benefits of This Architecture
 
 | Aspect | Benefit |
 |--------|---------|
-| **Cohesion** | Everything related to a feature stays together |
+| **Code Sharing** | Types and API client shared between mobile and PWA |
+| **Cohesion** | Features organized as vertical slices |
 | **Maintenance** | Easy to find and modify code |
-| **Testing** | Each feature can be tested in isolation |
-| **Scalability** | New features don't affect existing ones |
+| **Platform Parity** | Same features on mobile and web |
+| **Scalability** | Add new apps/libs without affecting existing ones |
 | **AI Agents** | Each agent will be a separate feature |
-| **Team** | Developers can work in parallel |
 
 ## 🚀 How to Run
+
+### Install Dependencies
+
+```bash
+# From the monorepo root
+npm install
+```
 
 ### Backend (API)
 
 ```bash
-cd api/FitTracker.Api
-dotnet run --urls="http://0.0.0.0:5000"
+npm run api
+# Or directly:
+cd apps/api/FitTracker.Api && dotnet run --urls="http://0.0.0.0:5000"
 ```
 
-The API will be available at `http://localhost:5000` with Swagger UI at the root.
+The API will be available at `http://localhost:5000` with Swagger UI.
 
-### Frontend (React Native)
+### Mobile App (React Native)
 
 ```bash
-npx expo start
+npm run mobile
+# Or directly:
+cd apps/mobile && npx expo start
 ```
+
+### PWA (Next.js)
+
+```bash
+# First time setup
+npm run pwa:install
+
+# Run development server
+npm run pwa
+# Or directly:
+cd apps/pwa && npm run dev
+```
+
+The PWA will be available at `http://localhost:3000`.
+
+> **Note**: The PWA is installed independently from the main monorepo to avoid React version conflicts between React Native and Next.js.
 
 ## 📋 TODO List - Project Progress
 
@@ -112,7 +151,7 @@ npx expo start
 - [x] JWT Authentication
 - [x] Password change
 - [x] Logout
-- [x] Session persistence (AsyncStorage)
+- [x] Session persistence
 
 #### 👤 User Profile
 - [x] Profile creation
@@ -137,7 +176,7 @@ npx expo start
 #### ⏱️ Workout Execution
 - [x] Workout stopwatch
 - [x] Rest timer between sets
-- [x] Vibration when rest ends
+- [x] Vibration when rest ends (mobile)
 - [x] Mark exercise as completed
 - [x] Record workout duration
 - [x] Lock workout after daily completion
@@ -164,6 +203,9 @@ npx expo start
 - [x] Swagger/OpenAPI with JWT support
 - [x] Refresh Token
 - [x] **Vertical Slice Architecture** (API restructured)
+- [x] **Monorepo structure** (Nx-style workspaces)
+- [x] **Shared libraries** (types, api-client)
+- [x] **Next.js PWA** (Progressive Web App)
 
 ---
 

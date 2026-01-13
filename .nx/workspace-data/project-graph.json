@@ -1,0 +1,207 @@
+{
+  "nodes": {
+    "@fittracker/api-client": {
+      "name": "@fittracker/api-client",
+      "type": "lib",
+      "data": {
+        "root": "libs/api-client",
+        "sourceRoot": "libs/api-client",
+        "name": "@fittracker/api-client",
+        "projectType": "library",
+        "tags": [
+          "npm:private"
+        ],
+        "metadata": {
+          "targetGroups": {}
+        },
+        "targets": {},
+        "implicitDependencies": []
+      }
+    },
+    "@fittracker/mobile": {
+      "name": "@fittracker/mobile",
+      "type": "app",
+      "data": {
+        "root": "apps/mobile",
+        "sourceRoot": "apps/mobile",
+        "name": "@fittracker/mobile",
+        "projectType": "application",
+        "tags": [
+          "npm:private"
+        ],
+        "metadata": {
+          "targetGroups": {
+            "NPM Scripts": [
+              "start",
+              "android",
+              "ios",
+              "web"
+            ]
+          }
+        },
+        "targets": {
+          "start": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start"
+            },
+            "metadata": {
+              "scriptContent": "expo start",
+              "runCommand": "npm run start"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "android": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "android"
+            },
+            "metadata": {
+              "scriptContent": "expo start --android",
+              "runCommand": "npm run android"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "ios": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "ios"
+            },
+            "metadata": {
+              "scriptContent": "expo start --ios",
+              "runCommand": "npm run ios"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "web": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "web"
+            },
+            "metadata": {
+              "scriptContent": "expo start --web",
+              "runCommand": "npm run web"
+            },
+            "configurations": {},
+            "parallelism": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    },
+    "@fittracker/types": {
+      "name": "@fittracker/types",
+      "type": "lib",
+      "data": {
+        "root": "libs/types",
+        "sourceRoot": "libs/types",
+        "name": "@fittracker/types",
+        "projectType": "library",
+        "tags": [
+          "npm:private"
+        ],
+        "metadata": {
+          "targetGroups": {}
+        },
+        "targets": {},
+        "implicitDependencies": []
+      }
+    },
+    "@fittracker/pwa": {
+      "name": "@fittracker/pwa",
+      "type": "app",
+      "data": {
+        "root": "apps/pwa",
+        "sourceRoot": "apps/pwa",
+        "name": "@fittracker/pwa",
+        "projectType": "application",
+        "tags": [
+          "npm:private"
+        ],
+        "metadata": {
+          "targetGroups": {
+            "NPM Scripts": [
+              "dev",
+              "build",
+              "start",
+              "lint"
+            ]
+          }
+        },
+        "targets": {
+          "dev": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "dev"
+            },
+            "metadata": {
+              "scriptContent": "next dev",
+              "runCommand": "npm run dev"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "build": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "build"
+            },
+            "metadata": {
+              "scriptContent": "next build",
+              "runCommand": "npm run build"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "dependsOn": [
+              "^build"
+            ],
+            "cache": true
+          },
+          "start": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "start"
+            },
+            "metadata": {
+              "scriptContent": "next start",
+              "runCommand": "npm run start"
+            },
+            "configurations": {},
+            "parallelism": true
+          },
+          "lint": {
+            "executor": "nx:run-script",
+            "options": {
+              "script": "lint"
+            },
+            "metadata": {
+              "scriptContent": "next lint",
+              "runCommand": "npm run lint"
+            },
+            "configurations": {},
+            "parallelism": true,
+            "cache": true
+          }
+        },
+        "implicitDependencies": []
+      }
+    }
+  },
+  "externalNodes": {},
+  "dependencies": {
+    "@fittracker/api-client": [
+      {
+        "source": "@fittracker/api-client",
+        "target": "@fittracker/types",
+        "type": "static"
+      }
+    ],
+    "@fittracker/mobile": [],
+    "@fittracker/types": [],
+    "@fittracker/pwa": []
+  },
+  "version": "6.0"
+}

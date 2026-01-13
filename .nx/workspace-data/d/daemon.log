@@ -1,0 +1,22 @@
+[NX Daemon Server] - 2026-01-13T10:57:07.132Z - Started listening on: /private/var/folders/vp/mhy_r40x7t18fnfkz22pb8zw0000gp/T/333c05571b63e5e8be25/d.sock
+[NX Daemon Server] - 2026-01-13T10:57:07.135Z - [WATCHER]: Subscribed to changes within: /Users/leofranca/Documents/Demo/ReactNative/FitTracker (native)
+[NX Daemon Server] - 2026-01-13T10:57:07.136Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2026-01-13T10:57:07.136Z - Established a connection. Number of open connections: 2
+[NX Daemon Server] - 2026-01-13T10:57:07.137Z - Closed a connection. Number of open connections: 1
+[NX Daemon Server] - 2026-01-13T10:57:07.137Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX Daemon Server] - 2026-01-13T10:57:07.138Z - Done responding to the client Shutdown initiated
+[NX Daemon Server] - 2026-01-13T10:57:07.138Z - Handled FORCE_SHUTDOWN. Handling time: 0. Response time: 1.
+[NX Daemon Server] - 2026-01-13T10:57:07.138Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2026-01-13T10:57:07.138Z - [WATCHER]: Stopping the watcher for /Users/leofranca/Documents/Demo/ReactNative/FitTracker (sources)
+[NX Daemon Server] - 2026-01-13T10:57:07.138Z - [WATCHER]: Stopping the watcher for /Users/leofranca/Documents/Demo/ReactNative/FitTracker (outputs)
+[NX Daemon Server] - 2026-01-13T11:01:19.341Z - Started listening on: /private/var/folders/vp/mhy_r40x7t18fnfkz22pb8zw0000gp/T/333c05571b63e5e8be25/d.sock
+[NX Daemon Server] - 2026-01-13T11:01:19.343Z - [WATCHER]: Subscribed to changes within: /Users/leofranca/Documents/Demo/ReactNative/FitTracker (native)
+[NX Daemon Server] - 2026-01-13T11:01:19.350Z - Established a connection. Number of open connections: 1
+[NX Daemon Server] - 2026-01-13T11:01:19.351Z - Established a connection. Number of open connections: 2
+[NX Daemon Server] - 2026-01-13T11:01:19.351Z - Closed a connection. Number of open connections: 1
+[NX Daemon Server] - 2026-01-13T11:01:19.352Z - [REQUEST]: Responding to the client. Shutdown initiated
+[NX Daemon Server] - 2026-01-13T11:01:19.352Z - Done responding to the client Shutdown initiated
+[NX Daemon Server] - 2026-01-13T11:01:19.352Z - Handled FORCE_SHUTDOWN. Handling time: 0. Response time: 0.
+[NX Daemon Server] - 2026-01-13T11:01:19.354Z - [WATCHER]: Stopping the watcher for /Users/leofranca/Documents/Demo/ReactNative/FitTracker (sources)
+[NX Daemon Server] - 2026-01-13T11:01:19.354Z - Closed a connection. Number of open connections: 0
+[NX Daemon Server] - 2026-01-13T11:01:19.354Z - [WATCHER]: Stopping the watcher for /Users/leofranca/Documents/Demo/ReactNative/FitTracker (outputs)
