@@ -1,11 +1,9 @@
 using System.Security.Claims;
-using FitTracker.Api.Data;
-using FitTracker.Api.DTOs;
-using FitTracker.Api.Models;
-using FitTracker.Api.Services;
+using FitTracker.Api.Features.Profiles;
+using FitTracker.Api.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace FitTracker.Api.Endpoints;
+namespace FitTracker.Api.Features.Auth;
 
 public static class AuthEndpoints
 {
@@ -50,7 +48,6 @@ public static class AuthEndpoints
                         Name = request.Name,
                         CreatedAt = DateTime.UtcNow,
                         UserProfileId = profile.Id,
-                        UserProfile = profile,
                     };
 
                     db.UserProfiles.Add(profile);

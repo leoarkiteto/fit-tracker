@@ -1,4 +1,4 @@
-namespace FitTracker.Api.Models;
+namespace FitTracker.Api.Features.Workouts;
 
 public class Exercise
 {

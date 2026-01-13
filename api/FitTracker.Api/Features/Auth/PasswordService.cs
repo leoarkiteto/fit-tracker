@@ -1,6 +1,6 @@
 using System.Security.Cryptography;
 
-namespace FitTracker.Api.Services;
+namespace FitTracker.Api.Features.Auth;
 
 public interface IPasswordService
 {

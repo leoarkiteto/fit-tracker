@@ -1,4 +1,4 @@
-namespace FitTracker.Api.DTOs;
+namespace FitTracker.Api.Features.Bioimpedance;
 
 public record BioimpedanceDto(
     Guid Id,

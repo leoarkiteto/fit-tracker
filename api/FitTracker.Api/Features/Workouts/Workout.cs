@@ -1,4 +1,4 @@
-namespace FitTracker.Api.Models;
+namespace FitTracker.Api.Features.Workouts;
 
 public class Workout
 {
@@ -15,7 +15,6 @@ public class Workout
 
     // Foreign key para UserProfile
     public Guid UserProfileId { get; set; }
-    public UserProfile? UserProfile { get; set; }
 }
 
 public enum WorkoutGoal

@@ -1,4 +1,4 @@
-namespace FitTracker.Api.Models;
+namespace FitTracker.Api.Features.Auth;
 
 public class User
 {
@@ -11,5 +11,4 @@ public class User
 
     // Relacionamento com UserProfile
     public Guid? UserProfileId { get; set; }
-    public UserProfile? UserProfile { get; set; }
 }

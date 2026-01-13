@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace FitTracker.Api.DTOs;
+namespace FitTracker.Api.Features.Auth;
 
 public record RegisterRequest(
     [Required] [EmailAddress] string Email,

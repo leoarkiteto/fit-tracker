@@ -1,9 +1,7 @@
 using Microsoft.EntityFrameworkCore;
-using FitTracker.Api.Data;
-using FitTracker.Api.DTOs;
-using FitTracker.Api.Models;
+using FitTracker.Api.Shared.Data;
 
-namespace FitTracker.Api.Endpoints;
+namespace FitTracker.Api.Features.Workouts;
 
 public static class WorkoutEndpoints
 {

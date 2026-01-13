@@ -1,4 +1,4 @@
-namespace FitTracker.Api.Models;
+namespace FitTracker.Api.Features.Bioimpedance;
 
 public class BioimpedanceData
 {
@@ -16,5 +16,4 @@ public class BioimpedanceData
 
     // Foreign key para UserProfile
     public Guid UserProfileId { get; set; }
-    public UserProfile? UserProfile { get; set; }
 }

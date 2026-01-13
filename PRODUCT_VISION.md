@@ -1,254 +1,253 @@
-# 📌 Contexto Geral do Projeto (para uso por IA / Cursor)
+# 📌 Project General Context (for AI / Cursor usage)
 
-## 1. Visão do Produto
+## 1. Product Vision
 
-Este projeto é um **aplicativo móvel de gerenciamento de treinos de musculação**, desenvolvido em **React Native**, com backend em **ASP.NET (Web API)**.
+This project is a **mobile workout management application**, developed in **React Native**, with backend in **ASP.NET (Web API)**.
 
-O aplicativo permite que o usuário:
+The application allows the user to:
 
-* Crie treinos para cada dia da semana
-* Defina exercícios, séries, repetições, carga e intervalo
-* Registre execuções reais dos treinos
-* Insira resultados de avaliações de **bioimpedância**
+* Create workouts for each day of the week
+* Define exercises, sets, reps, weight, and rest intervals
+* Track actual workout executions
+* Record **bioimpedance** assessment results
 
-O grande diferencial do produto é a **utilização de Inteligência Artificial por meio de Agentes de IA**, oferecidos como **recursos premium via assinatura**, com foco em personalização, acompanhamento inteligente e alto valor percebido.
-
----
-
-## 2. Público-Alvo
-
-* Praticantes de musculação iniciantes, intermediários e avançados
-* Usuários que treinam sem personal trainer
-* Pessoas que valorizam dados, evolução e acompanhamento inteligente
+The product differentiator is the **use of Artificial Intelligence through AI Agents**, offered as **premium features via subscription**, focusing on personalization, intelligent monitoring, and high perceived value.
 
 ---
 
-## 3. Objetivos da IA no Produto
+## 2. Target Audience
 
-A IA NÃO deve ser apenas um chatbot genérico.
-Ela deve atuar como um **Coach Virtual Inteligente**, tomando decisões e fornecendo insights baseados em dados reais do usuário.
-
-A IA deve:
-
-* Analisar dados históricos
-* Aprender padrões do usuário
-* Adaptar recomendações
-* Explicar decisões de forma clara e humana
+* Beginner, intermediate, and advanced weight training practitioners
+* Users who train without a personal trainer
+* People who value data, progress, and intelligent monitoring
 
 ---
 
-## 4. Agentes de IA (Arquitetura Conceitual)
+## 3. AI Objectives in the Product
 
-### 🧠 4.1 Agente Coach Virtual
+AI should NOT be just a generic chatbot.
+It should act as an **Intelligent Virtual Coach**, making decisions and providing insights based on real user data.
 
-Responsável por interação conversacional.
+The AI should:
 
-Funções:
-
-* Responder dúvidas sobre treino
-* Sugerir ajustes
-* Explicar decisões da IA
-* Lembrar preferências do usuário
-
-Exemplos:
-
-* "Posso trocar esse exercício hoje?"
-* "Meu treino está pesado demais"
+* Analyze historical data
+* Learn user patterns
+* Adapt recommendations
+* Explain decisions clearly and in a human way
 
 ---
 
-### 📊 4.2 Agente Analista de Progresso
+## 4. AI Agents (Conceptual Architecture)
 
-Responsável por análise de dados históricos.
+### 🧠 4.1 Virtual Coach Agent
 
-Analisa:
+Responsible for conversational interaction.
 
-* Evolução de cargas
-* Volume semanal
-* Frequência
-* Bioimpedância
+Functions:
 
-Entrega:
+* Answer training questions
+* Suggest adjustments
+* Explain AI decisions
+* Remember user preferences
 
-* Relatórios em linguagem natural
-* Resumos semanais/mensais
+Examples:
 
----
-
-### 🧪 4.3 Agente de Bioimpedância
-
-Especializado na interpretação dos dados corporais.
-
-Dados analisados:
-
-* Peso corporal
-* Massa magra
-* Gordura corporal
-* Taxa metabólica basal (se disponível)
-
-Objetivo:
-
-* Explicar mudanças
-* Relacionar com treino
-* Sugerir ajustes
+* "Can I switch this exercise today?"
+* "My workout is too heavy"
 
 ---
 
-### ⚠️ 4.4 Agente de Prevenção de Lesões
+### 📊 4.2 Progress Analyst Agent
 
-Analisa riscos com base em padrões de treino.
+Responsible for historical data analysis.
 
-Detecta:
+Analyzes:
 
-* Aumento abrupto de carga
-* Volume excessivo
-* Pouco descanso
-* Queda de performance
+* Weight progression
+* Weekly volume
+* Frequency
+* Bioimpedance
 
-Entrega:
+Delivers:
 
-* Alertas preventivos
-
-⚠️ Importante: nunca dar diagnóstico médico.
+* Reports in natural language
+* Weekly/monthly summaries
 
 ---
 
-### 🗓️ 4.5 Agente de Planejamento de Treinos
+### 🧪 4.3 Bioimpedance Agent
 
-Responsável por organização de ciclos.
+Specialized in body data interpretation.
 
-Cria:
+Data analyzed:
 
-* Planejamento semanal
-* Mesociclos (4–8 semanas)
+* Body weight
+* Lean mass
+* Body fat
+* Basal metabolic rate (if available)
+
+Objective:
+
+* Explain changes
+* Relate to training
+* Suggest adjustments
+
+---
+
+### ⚠️ 4.4 Injury Prevention Agent
+
+Analyzes risks based on training patterns.
+
+Detects:
+
+* Abrupt weight increase
+* Excessive volume
+* Insufficient rest
+* Performance drop
+
+Delivers:
+
+* Preventive alerts
+
+⚠️ Important: never give medical diagnosis.
+
+---
+
+### 🗓️ 4.5 Workout Planning Agent
+
+Responsible for cycle organization.
+
+Creates:
+
+* Weekly planning
+* Mesocycles (4-8 weeks)
 * Deloads
 
-Baseado em:
+Based on:
 
-* Objetivo do usuário
-* Disponibilidade semanal
-* Nível de treino
-
----
-
-## 5. Funcionalidades de IA (Premium)
-
-### 🔥 Treinos Adaptativos Automáticos
-
-* Ajuste de carga, reps e volume
-* Baseado no desempenho real
-* Considera falhas, RPE percebido e bioimpedância
+* User goal
+* Weekly availability
+* Training level
 
 ---
 
-### 💬 Chat com Memória (Coach Virtual)
+## 5. AI Features (Premium)
 
-* Conversa natural
-* Memória curta e longa
-* Contexto histórico do usuário
+### 🔥 Automatic Adaptive Workouts
 
----
-
-### 📈 Análise Inteligente de Progresso
-
-* Correlação entre treino e bioimpedância
-* Comparações temporais
-* Explicações em texto
+* Weight, reps, and volume adjustment
+* Based on actual performance
+* Considers failures, perceived RPE, and bioimpedance
 
 ---
 
-### ⚠️ Alertas de Overtraining
+### 💬 Chat with Memory (Virtual Coach)
 
-* Identificação de padrões perigosos
-* Sugestões de ajuste
-
----
-
-### 🔄 Substituição Inteligente de Exercícios
-
-* Sugestão de equivalentes
-* Mantém estímulo muscular
-* Considera equipamentos disponíveis
+* Natural conversation
+* Short and long-term memory
+* User historical context
 
 ---
 
-### 🎯 Previsão de Resultados (Avançado)
+### 📈 Smart Progress Analysis
 
-* Estimativas baseadas em dados históricos
-* Sempre apresentadas como aproximações
-
----
-
-## 6. Regras Importantes para a IA
-
-### ❌ O que a IA NÃO deve fazer
-
-* Diagnóstico médico
-* Prescrição clínica
-* Garantir resultados
-* Incentivar comportamentos perigosos
+* Workout and bioimpedance correlation
+* Temporal comparisons
+* Text explanations
 
 ---
 
-### ✅ Boas práticas
+### ⚠️ Overtraining Alerts
 
-* Sempre explicar o *porquê* das sugestões
-* Usar linguagem clara e motivadora
-* Ser conservadora em ajustes de carga
-* Usar disclaimers quando necessário
+* Dangerous pattern identification
+* Adjustment suggestions
 
 ---
 
-## 7. Estrutura Técnica (Resumo)
+### 🔄 Smart Exercise Substitution
+
+* Equivalent suggestions
+* Maintains muscle stimulus
+* Considers available equipment
+
+---
+
+### 🎯 Results Prediction (Advanced)
+
+* Estimates based on historical data
+* Always presented as approximations
+
+---
+
+## 6. Important Rules for AI
+
+### ❌ What AI should NOT do
+
+* Medical diagnosis
+* Clinical prescription
+* Guarantee results
+* Encourage dangerous behaviors
+
+---
+
+### ✅ Best practices
+
+* Always explain the *why* of suggestions
+* Use clear and motivating language
+* Be conservative in weight adjustments
+* Use disclaimers when necessary
+
+---
+
+## 7. Technical Structure (Summary)
 
 ### Frontend
 
 * React Native
-* Telas de treino, histórico, bioimpedância e chat
+* Workout, history, bioimpedance, and chat screens
 
 ### Backend
 
 * ASP.NET Web API
-* Autenticação
-* Persistência de dados
+* Authentication
+* Data persistence
 
-### Dados importantes para IA
+### Important data for AI
 
-* Usuário
-* Treinos planejados
-* Execuções reais
-* Bioimpedância
-* Feedback subjetivo (leve / ok / pesado)
+* User
+* Planned workouts
+* Actual executions
+* Bioimpedance
+* Subjective feedback (light / ok / heavy)
 
 ---
 
-## 8. Modelo de Negócio
+## 8. Business Model
 
 ### Free
 
-* Criação manual de treinos
-* Registro de cargas
-* Bioimpedância manual
+* Manual workout creation
+* Weight tracking
+* Manual bioimpedance
 
-### Premium (IA)
+### Premium (AI)
 
-* Todos os agentes de IA
-* Treinos adaptativos
-* Análises inteligentes
-* Planejamento automático
-
----
-
-## 9. Tom de Comunicação da IA
-
-* Profissional, motivador e acessível
-* Estilo "coach experiente"
-* Evitar jargões excessivos
-* Foco em progresso sustentável
+* All AI agents
+* Adaptive workouts
+* Smart analytics
+* Automatic planning
 
 ---
 
-## 10. Objetivo Final
+## 9. AI Communication Tone
 
-Criar um aplicativo que entregue **valor real**, fazendo o usuário sentir que tem um **personal trainer inteligente no bolso**, justificando claramente o custo da assinatura.
+* Professional, motivating, and accessible
+* "Experienced coach" style
+* Avoid excessive jargon
+* Focus on sustainable progress
 
+---
+
+## 10. Final Goal
+
+Create an application that delivers **real value**, making the user feel they have a **smart personal trainer in their pocket**, clearly justifying the subscription cost.

@@ -1,10 +1,9 @@
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
-using FitTracker.Api.Models;
 using Microsoft.IdentityModel.Tokens;
 
-namespace FitTracker.Api.Services;
+namespace FitTracker.Api.Features.Auth;
 
 public interface IJwtService
 {

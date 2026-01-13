@@ -1,19 +1,29 @@
-using FitTracker.Api.Models;
+using FitTracker.Api.Features.Auth;
+using FitTracker.Api.Features.Bioimpedance;
+using FitTracker.Api.Features.Profiles;
+using FitTracker.Api.Features.Workouts;
 using Microsoft.EntityFrameworkCore;
 
-namespace FitTracker.Api.Data;
+namespace FitTracker.Api.Shared.Data;
 
 public class FitTrackerDbContext : DbContext
 {
     public FitTrackerDbContext(DbContextOptions<FitTrackerDbContext> options)
         : base(options) { }
 
+    // Auth
     public DbSet<User> Users => Set<User>();
+
+    // Profiles
     public DbSet<UserProfile> UserProfiles => Set<UserProfile>();
+
+    // Workouts
     public DbSet<Workout> Workouts => Set<Workout>();
     public DbSet<Exercise> Exercises => Set<Exercise>();
-    public DbSet<BioimpedanceData> BioimpedanceData => Set<BioimpedanceData>();
     public DbSet<CompletedWorkout> CompletedWorkouts => Set<CompletedWorkout>();
+
+    // Bioimpedance
+    public DbSet<BioimpedanceData> BioimpedanceData => Set<BioimpedanceData>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -27,12 +37,6 @@ public class FitTrackerDbContext : DbContext
             entity.HasIndex(e => e.Email).IsUnique();
             entity.Property(e => e.PasswordHash).IsRequired();
             entity.Property(e => e.Name).IsRequired().HasMaxLength(100);
-
-            entity
-                .HasOne(e => e.UserProfile)
-                .WithOne()
-                .HasForeignKey<User>(e => e.UserProfileId)
-                .OnDelete(DeleteBehavior.SetNull);
         });
 
         // UserProfile
@@ -51,7 +55,7 @@ public class FitTrackerDbContext : DbContext
             entity.Property(e => e.Description).HasMaxLength(500);
             entity.Property(e => e.Goal).HasConversion<string>();
 
-            // Converter lista de dias para string JSON
+            // Converter lista de dias para string
             entity
                 .Property(e => e.Days)
                 .HasConversion(
@@ -61,12 +65,6 @@ public class FitTrackerDbContext : DbContext
                             .Select(d => Enum.Parse<DayOfWeekEnum>(d))
                             .ToList()
                 );
-
-            entity
-                .HasOne(e => e.UserProfile)
-                .WithMany()
-                .HasForeignKey(e => e.UserProfileId)
-                .OnDelete(DeleteBehavior.Cascade);
 
             entity
                 .HasMany(e => e.Exercises)
@@ -84,19 +82,6 @@ public class FitTrackerDbContext : DbContext
             entity.Property(e => e.Notes).HasMaxLength(500);
         });
 
-        // BioimpedanceData
-        modelBuilder.Entity<BioimpedanceData>(entity =>
-        {
-            entity.HasKey(e => e.Id);
-            entity.Property(e => e.Notes).HasMaxLength(500);
-
-            entity
-                .HasOne(e => e.UserProfile)
-                .WithMany()
-                .HasForeignKey(e => e.UserProfileId)
-                .OnDelete(DeleteBehavior.Cascade);
-        });
-
         // CompletedWorkout
         modelBuilder.Entity<CompletedWorkout>(entity =>
         {
@@ -107,12 +92,13 @@ public class FitTrackerDbContext : DbContext
                 .WithMany()
                 .HasForeignKey(e => e.WorkoutId)
                 .OnDelete(DeleteBehavior.Cascade);
+        });
 
-            entity
-                .HasOne(e => e.UserProfile)
-                .WithMany()
-                .HasForeignKey(e => e.UserProfileId)
-                .OnDelete(DeleteBehavior.Cascade);
+        // BioimpedanceData
+        modelBuilder.Entity<BioimpedanceData>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Notes).HasMaxLength(500);
         });
     }
 }

@@ -1,7 +1,9 @@
 using System.Text;
-using FitTracker.Api.Data;
-using FitTracker.Api.Endpoints;
-using FitTracker.Api.Services;
+using FitTracker.Api.Features.Auth;
+using FitTracker.Api.Features.Bioimpedance;
+using FitTracker.Api.Features.Profiles;
+using FitTracker.Api.Features.Workouts;
+using FitTracker.Api.Shared.Data;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
@@ -9,7 +11,9 @@ using Microsoft.OpenApi.Models;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// Add services to the container
+// ============================================
+// SERVICES CONFIGURATION
+// ============================================
 
 // SQLite Database
 builder.Services.AddDbContext<FitTrackerDbContext>(options =>
@@ -19,7 +23,7 @@ builder.Services.AddDbContext<FitTrackerDbContext>(options =>
     )
 );
 
-// Services
+// Feature Services - Auth
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
 
@@ -112,7 +116,10 @@ builder.Services.AddSwaggerGen(options =>
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline
+// ============================================
+// MIDDLEWARE PIPELINE
+// ============================================
+
 app.UseCors("AllowAll");
 
 // Swagger sempre disponível para facilitar desenvolvimento
@@ -127,19 +134,29 @@ app.UseSwaggerUI(options =>
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Garantir que o banco de dados existe e aplicar migrations
+// Garantir que o banco de dados existe
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<FitTrackerDbContext>();
     db.Database.EnsureCreated();
 }
 
-// Map Minimal API endpoints
+// ============================================
+// FEATURE ENDPOINTS (Vertical Slice)
+// ============================================
+
+// Auth Feature
 app.MapAuthEndpoints();
+
+// Profiles Feature
 app.MapProfileEndpoints();
+
+// Workouts Feature
 app.MapWorkoutEndpoints();
-app.MapBioimpedanceEndpoints();
 app.MapCompletedWorkoutEndpoints();
+
+// Bioimpedance Feature
+app.MapBioimpedanceEndpoints();
 
 // Health check endpoint
 app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))

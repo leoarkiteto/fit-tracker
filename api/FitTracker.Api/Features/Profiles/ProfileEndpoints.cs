@@ -1,9 +1,7 @@
-using FitTracker.Api.Data;
-using FitTracker.Api.DTOs;
-using FitTracker.Api.Models;
+using FitTracker.Api.Shared.Data;
 using Microsoft.EntityFrameworkCore;
 
-namespace FitTracker.Api.Endpoints;
+namespace FitTracker.Api.Features.Profiles;
 
 public static class ProfileEndpoints
 {
