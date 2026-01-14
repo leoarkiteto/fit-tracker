@@ -7,7 +7,12 @@ public record UserProfileDto(
     double? Height,
     double? CurrentWeight,
     double? GoalWeight,
-    string? AvatarUrl
+    string? AvatarUrl,
+    // AI Planning fields
+    ExperienceLevel ExperienceLevel,
+    int AvailableDaysPerWeek,
+    int? PreferredWorkoutDuration,
+    EquipmentType EquipmentType
 );
 
 public record CreateUserProfileRequest(
@@ -16,7 +21,12 @@ public record CreateUserProfileRequest(
     double? Height,
     double? CurrentWeight,
     double? GoalWeight,
-    string? AvatarUrl
+    string? AvatarUrl,
+    // AI Planning fields (optional with defaults)
+    ExperienceLevel? ExperienceLevel = null,
+    int? AvailableDaysPerWeek = null,
+    int? PreferredWorkoutDuration = null,
+    EquipmentType? EquipmentType = null
 );
 
 public record UpdateUserProfileRequest(
@@ -25,5 +35,10 @@ public record UpdateUserProfileRequest(
     double? Height,
     double? CurrentWeight,
     double? GoalWeight,
-    string? AvatarUrl
+    string? AvatarUrl,
+    // AI Planning fields (optional)
+    ExperienceLevel? ExperienceLevel = null,
+    int? AvailableDaysPerWeek = null,
+    int? PreferredWorkoutDuration = null,
+    EquipmentType? EquipmentType = null
 );

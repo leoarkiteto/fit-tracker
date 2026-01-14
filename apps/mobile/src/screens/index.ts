@@ -9,3 +9,4 @@ export { ProfileScreen } from "./ProfileScreen";
 export { SignInScreen } from "./SignInScreen";
 export { SignUpScreen } from "./SignUpScreen";
 export { ChangePasswordScreen } from "./ChangePasswordScreen";
+export { WorkoutPlanningScreen } from "./WorkoutPlanningScreen";

@@ -207,6 +207,13 @@ The PWA will be available at `http://localhost:3000`.
 - [x] **Shared libraries** (types, api-client)
 - [x] **Next.js PWA** (Progressive Web App)
 
+#### 🧠 AI Infrastructure
+- [x] **Semantic Kernel** integration
+- [x] **Ollama** local LLM support
+- [x] AI Planning endpoints (`/api/ai/planning/*`)
+- [x] Prompt engineering for workout generation
+- [x] User context aggregation (profile, history, bioimpedance)
+
 ---
 
 ### ❌ Pending Features
@@ -265,11 +272,14 @@ The PWA will be available at `http://localhost:3000`.
 - [ ] Performance drop identification
 - [ ] Preventive alerts with disclaimers
 
-#### 🗓️ Workout Planning Agent
-- [ ] Automatic weekly workout creation
-- [ ] Mesocycle planning (4-8 weeks)
-- [ ] Deload programming
-- [ ] Adaptation by goal/availability/level
+#### 🗓️ Workout Planning Agent ✅ IMPLEMENTED
+- [x] Automatic weekly workout creation
+- [x] AI-powered plan generation using Semantic Kernel + Ollama
+- [x] Adaptation by goal/availability/level/equipment
+- [x] Plan preview with rationale explanation
+- [x] Accept/reject generated plans
+- [ ] Mesocycle planning (4-8 weeks) - *Future enhancement*
+- [ ] Deload programming - *Future enhancement*
 
 #### 🔥 Automatic Adaptive Workouts
 - [ ] Automatic weight adjustment

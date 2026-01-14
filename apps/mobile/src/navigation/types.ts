@@ -20,6 +20,7 @@ export type RootStackParamList = {
   BioimpedanceHistory: undefined;
   Profile: undefined;
   ChangePassword: undefined;
+  WorkoutPlanning: undefined;
 };
 
 declare global {

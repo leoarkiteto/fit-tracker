@@ -62,7 +62,7 @@ const AppContext = createContext<AppContextType | undefined>(undefined);
 export const AppProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const { user, isAuthenticated } = useAuth();
+  const { user, isAuthenticated, signOut } = useAuth();
   
   const [profileId, setProfileId] = useState<string | null>(null);
   const [profile, setProfile] = useState<UserProfile>({ name: "Atleta" });
@@ -112,8 +112,14 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
         setProfileId(authProfileId);
         setProfile(loadedProfile);
         await loadProfileData(authProfileId);
-      } catch (err) {
+      } catch (err: any) {
         console.error("Error loading profile:", err);
+        // If profile not found (404), logout the user - likely DB was reset
+        if (err?.message?.includes("404")) {
+          console.log("Profile not found, logging out...");
+          await signOut();
+          return;
+        }
         setError("Erro ao carregar perfil. Tente novamente.");
       }
     } catch (err) {

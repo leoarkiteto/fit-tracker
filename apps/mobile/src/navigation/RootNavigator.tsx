@@ -9,6 +9,7 @@ import {
   BioimpedanceFormScreen,
   BioimpedanceHistoryScreen,
   ChangePasswordScreen,
+  WorkoutPlanningScreen,
 } from "../screens";
 import { RootStackParamList } from "./types";
 
@@ -55,6 +56,14 @@ export const RootNavigator: React.FC = () => {
       <Stack.Screen
         name="ChangePassword"
         component={ChangePasswordScreen}
+      />
+      <Stack.Screen
+        name="WorkoutPlanning"
+        component={WorkoutPlanningScreen}
+        options={{
+          animation: "slide_from_bottom",
+          presentation: "modal",
+        }}
       />
     </Stack.Navigator>
   );

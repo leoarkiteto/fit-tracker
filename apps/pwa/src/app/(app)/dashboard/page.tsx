@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { workoutsApi, completedWorkoutsApi } from "@fittracker/api-client";
-import type { Workout, WorkoutStats } from "@fittracker/types";
+import { workoutsApi, completedWorkoutsApi } from "../../../lib/api-client";
+import type { Workout, WorkoutStats } from "../../../lib/types";
 import { Card, CardContent, Button } from "@/components/ui";
 import Link from "next/link";
 import {
@@ -16,6 +16,7 @@ import {
   CheckCircle,
   Loader2,
   Plus,
+  Sparkles,
 } from "lucide-react";
 
 export default function DashboardPage() {
@@ -264,13 +265,13 @@ export default function DashboardPage() {
               </CardContent>
             </Card>
           </Link>
-          <Link href="/profile">
+          <Link href="/workouts/ai-planning">
             <Card hover className="h-full">
               <CardContent className="p-5 text-center">
-                <div className="w-12 h-12 rounded-xl bg-purple-100 flex items-center justify-center mx-auto mb-2">
-                  <Calendar className="w-6 h-6 text-purple-500" />
+                <div className="w-12 h-12 rounded-xl bg-amber-100 flex items-center justify-center mx-auto mb-2">
+                  <Sparkles className="w-6 h-6 text-amber-500" />
                 </div>
-                <p className="text-sm font-medium text-surface-700">Profile</p>
+                <p className="text-sm font-medium text-surface-700">AI Planner</p>
               </CardContent>
             </Card>
           </Link>

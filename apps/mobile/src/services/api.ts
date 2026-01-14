@@ -575,3 +575,89 @@ export const authApi = {
     });
   },
 };
+
+// ============= AI Planning Types =============
+
+export interface GeneratePlanRequest {
+  userProfileId: string;
+  goal: WorkoutGoal;
+  overrideDaysPerWeek?: number;
+  overrideDurationMinutes?: number;
+  overrideEquipment?: "Gym" | "Home" | "Minimal";
+  additionalNotes?: string;
+}
+
+export interface GeneratedExercise {
+  name: string;
+  muscleGroup: MuscleGroup;
+  sets: number;
+  reps: number;
+  suggestedWeight?: number;
+  restSeconds: number;
+  notes?: string;
+}
+
+export interface GeneratedWorkout {
+  name: string;
+  description?: string;
+  goal: WorkoutGoal;
+  days: DayOfWeek[];
+  exercises: GeneratedExercise[];
+  estimatedDurationMinutes: number;
+}
+
+export interface GeneratedPlanResponse {
+  planId: string;
+  summary: string;
+  rationale: string;
+  workouts: GeneratedWorkout[];
+  generatedAt: string;
+}
+
+export interface AcceptPlanRequest {
+  planId: string;
+  userProfileId: string;
+  workouts: GeneratedWorkout[];
+}
+
+export interface AcceptPlanResponse {
+  createdWorkoutIds: string[];
+  message: string;
+}
+
+export interface AIPlanningStatus {
+  available: boolean;
+  provider: string;
+  model: string;
+  endpoint: string;
+}
+
+// ============= AI Planning API =============
+
+export const aiPlanningApi = {
+  getStatus: async (): Promise<AIPlanningStatus> => {
+    return fetchApi<AIPlanningStatus>(API_ENDPOINTS.aiPlanningStatus, undefined, false);
+  },
+
+  generate: async (request: GeneratePlanRequest): Promise<GeneratedPlanResponse> => {
+    return fetchApi<GeneratedPlanResponse>(API_ENDPOINTS.aiPlanningGenerate, {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
+  },
+
+  preview: async (planId: string): Promise<GeneratedPlanResponse | null> => {
+    try {
+      return await fetchApi<GeneratedPlanResponse>(API_ENDPOINTS.aiPlanningPreview(planId));
+    } catch {
+      return null;
+    }
+  },
+
+  accept: async (request: AcceptPlanRequest): Promise<AcceptPlanResponse> => {
+    return fetchApi<AcceptPlanResponse>(API_ENDPOINTS.aiPlanningAccept, {
+      method: "POST",
+      body: JSON.stringify(request),
+    });
+  },
+};

@@ -51,6 +51,10 @@ public static class ProfileEndpoints
                         CurrentWeight = request.CurrentWeight,
                         GoalWeight = request.GoalWeight,
                         AvatarUrl = request.AvatarUrl,
+                        ExperienceLevel = request.ExperienceLevel ?? ExperienceLevel.Beginner,
+                        AvailableDaysPerWeek = request.AvailableDaysPerWeek ?? 3,
+                        PreferredWorkoutDuration = request.PreferredWorkoutDuration,
+                        EquipmentType = request.EquipmentType ?? EquipmentType.Gym,
                         CreatedAt = DateTime.UtcNow,
                         UpdatedAt = DateTime.UtcNow,
                     };
@@ -80,6 +84,13 @@ public static class ProfileEndpoints
                     profile.CurrentWeight = request.CurrentWeight;
                     profile.GoalWeight = request.GoalWeight;
                     profile.AvatarUrl = request.AvatarUrl;
+                    if (request.ExperienceLevel.HasValue)
+                        profile.ExperienceLevel = request.ExperienceLevel.Value;
+                    if (request.AvailableDaysPerWeek.HasValue)
+                        profile.AvailableDaysPerWeek = request.AvailableDaysPerWeek.Value;
+                    profile.PreferredWorkoutDuration = request.PreferredWorkoutDuration ?? profile.PreferredWorkoutDuration;
+                    if (request.EquipmentType.HasValue)
+                        profile.EquipmentType = request.EquipmentType.Value;
                     profile.UpdatedAt = DateTime.UtcNow;
 
                     await db.SaveChangesAsync();
@@ -120,6 +131,10 @@ public static class ProfileEndpoints
             profile.Height,
             profile.CurrentWeight,
             profile.GoalWeight,
-            profile.AvatarUrl
+            profile.AvatarUrl,
+            profile.ExperienceLevel,
+            profile.AvailableDaysPerWeek,
+            profile.PreferredWorkoutDuration,
+            profile.EquipmentType
         );
 }

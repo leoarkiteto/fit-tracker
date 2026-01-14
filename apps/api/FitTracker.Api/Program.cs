@@ -1,4 +1,7 @@
 using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using FitTracker.Api.Features.AI.WorkoutPlanning;
 using FitTracker.Api.Features.Auth;
 using FitTracker.Api.Features.Bioimpedance;
 using FitTracker.Api.Features.Profiles;
@@ -8,12 +11,20 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using Microsoft.SemanticKernel;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // ============================================
 // SERVICES CONFIGURATION
 // ============================================
+
+// Configure JSON serialization to be case-insensitive and handle enums as strings
+builder.Services.ConfigureHttpJsonOptions(options =>
+{
+    options.SerializerOptions.PropertyNameCaseInsensitive = true;
+    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+});
 
 // SQLite Database
 builder.Services.AddDbContext<FitTrackerDbContext>(options =>
@@ -26,6 +37,23 @@ builder.Services.AddDbContext<FitTrackerDbContext>(options =>
 // Feature Services - Auth
 builder.Services.AddScoped<IPasswordService, PasswordService>();
 builder.Services.AddScoped<IJwtService, JwtService>();
+
+// Feature Services - AI (Semantic Kernel + Ollama)
+var ollamaEndpoint = builder.Configuration["AI:Ollama:Endpoint"] ?? "http://localhost:11434";
+var ollamaModel = builder.Configuration["AI:Ollama:Model"] ?? "llama3.2";
+
+var kernelBuilder = Kernel.CreateBuilder();
+
+#pragma warning disable SKEXP0070 // Ollama connector is experimental
+kernelBuilder.AddOllamaChatCompletion(
+    modelId: ollamaModel,
+    endpoint: new Uri(ollamaEndpoint)
+);
+#pragma warning restore SKEXP0070
+
+var kernel = kernelBuilder.Build();
+builder.Services.AddSingleton(kernel);
+builder.Services.AddScoped<IWorkoutPlanningAgent, WorkoutPlanningAgent>();
 
 // JWT Authentication
 var jwtSecret = builder.Configuration["Jwt:Secret"] ?? "FitTrackerSuperSecretKey2024!@#$%^&*()";
@@ -157,6 +185,9 @@ app.MapCompletedWorkoutEndpoints();
 
 // Bioimpedance Feature
 app.MapBioimpedanceEndpoints();
+
+// AI Features
+app.MapWorkoutPlanningEndpoints();
 
 // Health check endpoint
 app.MapGet("/health", () => Results.Ok(new { status = "healthy", timestamp = DateTime.UtcNow }))

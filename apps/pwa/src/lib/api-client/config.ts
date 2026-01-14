@@ -46,4 +46,10 @@ export const API_ENDPOINTS = {
     `/api/profiles/${profileId}/completed-workouts/stats`,
   completedWorkout: (profileId: string, id: string) =>
     `/api/profiles/${profileId}/completed-workouts/${id}`,
+
+  // AI Planning
+  aiPlanningGenerate: "/api/ai/planning/generate",
+  aiPlanningPreview: (planId: string) => `/api/ai/planning/preview/${planId}`,
+  aiPlanningAccept: "/api/ai/planning/accept",
+  aiPlanningStatus: "/api/ai/planning/status",
 };

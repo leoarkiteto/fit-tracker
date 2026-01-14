@@ -292,6 +292,19 @@ export const HomeScreen: React.FC = () => {
             </TouchableOpacity>
 
             <TouchableOpacity
+              onPress={() => navigation.navigate("WorkoutPlanning")}
+              style={styles.quickAction}
+            >
+              <LinearGradient
+                colors={[colors.accent, "#FBBF24"]}
+                style={styles.quickActionGradient}
+              >
+                <Ionicons name="sparkles" size={28} color={colors.white} />
+              </LinearGradient>
+              <Text style={styles.quickActionText}>AI Planner</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
               onPress={() => navigation.navigate("Profile")}
               style={styles.quickAction}
             >
