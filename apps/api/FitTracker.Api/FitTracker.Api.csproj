@@ -16,6 +16,7 @@
     <PackageReference Include="Microsoft.EntityFrameworkCore.Sqlite" Version="9.0.1" />
     <PackageReference Include="Microsoft.SemanticKernel" Version="1.32.0" />
     <PackageReference Include="Microsoft.SemanticKernel.Connectors.Ollama" Version="1.32.0-alpha" />
+    <PackageReference Include="Scalar.AspNetCore" Version="2.0.36" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
   </ItemGroup>
 

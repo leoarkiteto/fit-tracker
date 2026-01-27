@@ -7,9 +7,9 @@
     "libs/*"
   ],
   "scripts": {
-    "mobile": "npm run start --workspace=apps/mobile",
-    "mobile:ios": "npm run ios --workspace=apps/mobile",
-    "mobile:android": "npm run android --workspace=apps/mobile",
+    "mobile": "cd apps/mobile && npm run start --workspace=apps/mobile",
+    "mobile:ios": "cd apps/mobile && npm run ios",
+    "mobile:android": "cd apps/mobile && npm run android --workspace=apps/mobile",
     "pwa": "cd apps/pwa && npm run dev",
     "pwa:build": "cd apps/pwa && npm run build",
     "pwa:install": "cd apps/pwa && npm install",

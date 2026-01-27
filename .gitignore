@@ -1,13 +1,43 @@
 # Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
 
-# dependencies
+# Dependencies
 node_modules/
 
-# Expo
-.expo/
+# Nx
+.nx/
 dist/
+.angular/
+tmp/
+
+# Expo / React Native
+.expo/
 web-build/
 expo-env.d.ts
+
+# Metro
+.metro-health-check*
+
+# Next.js (PWA)
+.next/
+out/
+.vercel
+
+# .NET / API
+[Bb]in/
+[Oo]bj/
+[Dd]ebug/
+[Rr]elease/
+*.user
+*.userosscache
+*.sln.docstates
+*.db
+*.db-shm
+*.db-wal
+project.lock.json
+*.nupkg
+*.snupkg
+.nuget/
+packages/
 
 # Native
 .kotlin/
@@ -18,10 +48,11 @@ expo-env.d.ts
 *.key
 *.mobileprovision
 
-# Metro
-.metro-health-check*
+# Generated native folders
+/ios
+/android
 
-# debug
+# Debug
 npm-debug.*
 yarn-debug.*
 yarn-error.*
@@ -29,13 +60,41 @@ yarn-error.*
 # macOS
 .DS_Store
 *.pem
+.AppleDouble
+.LSOverride
+Thumbs.db
+ehthumbs.db
 
-# local env files
+# IDE / Editors
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# Local env files
+.env
 .env*.local
+.env.development.local
+.env.test.local
+.env.production.local
 
-# typescript
+# TypeScript
 *.tsbuildinfo
 
-# generated native folders
-/ios
-/android
+# Build artifacts
+.fake
+*.log
+*.pid
+*.seed
+*.pid.lock
+
+# Testing
+coverage/
+.nyc_output/
+*.lcov
+
+# Misc
+*.bak
+*.tmp
+.cache/

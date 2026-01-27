@@ -12,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using Microsoft.SemanticKernel;
+using Scalar.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -150,12 +151,12 @@ var app = builder.Build();
 
 app.UseCors("AllowAll");
 
-// Swagger sempre disponível para facilitar desenvolvimento
+// OpenAPI: expor o documento JSON (Swashbuckle) e documentação com Scalar na raiz
 app.UseSwagger();
-app.UseSwaggerUI(options =>
+app.MapScalarApiReference("/", options =>
 {
-    options.SwaggerEndpoint("/swagger/v1/swagger.json", "FitTracker API v1");
-    options.RoutePrefix = string.Empty; // Swagger na raiz
+    options.WithTitle("FitTracker API");
+    options.WithOpenApiRoutePattern("/swagger/{documentName}/swagger.json");
 });
 
 // Authentication & Authorization

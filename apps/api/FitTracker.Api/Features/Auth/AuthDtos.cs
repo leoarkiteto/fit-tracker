@@ -8,23 +8,11 @@ public record RegisterRequest(
     [Required] string Name
 );
 
-public record LoginRequest(
-    [Required] [EmailAddress] string Email,
-    [Required] string Password
-);
+public record LoginRequest([Required] [EmailAddress] string Email, [Required] string Password);
 
-public record AuthResponse(
-    string Token,
-    DateTime ExpiresAt,
-    UserDto User
-);
+public record AuthResponse(string Token, DateTime ExpiresAt, UserDto User);
 
-public record UserDto(
-    Guid Id,
-    string Email,
-    string Name,
-    Guid? ProfileId
-);
+public record UserDto(Guid Id, string Email, string Name, Guid? ProfileId);
 
 public record ChangePasswordRequest(
     [Required] string CurrentPassword,

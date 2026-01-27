@@ -1,6 +1,0 @@
-{
-  "/(app)/workouts/ai-planning/page": "app/(app)/workouts/ai-planning/page.js",
-  "/(app)/workouts/page": "app/(app)/workouts/page.js",
-  "/(app)/dashboard/page": "app/(app)/dashboard/page.js",
-  "/(app)/workouts/[id]/page": "app/(app)/workouts/[id]/page.js"
-}
