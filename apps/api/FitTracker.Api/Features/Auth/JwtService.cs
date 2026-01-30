@@ -1,8 +1,3 @@
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Text;
-using Microsoft.IdentityModel.Tokens;
-
 namespace FitTracker.Api.Features.Auth;
 
 public interface IJwtService
@@ -27,13 +22,13 @@ public class JwtService : IJwtService
     {
         var tokenHandler = new JwtSecurityTokenHandler();
         var expiresInHours = int.Parse(_configuration["Jwt:ExpiresInHours"] ?? "24");
-        
+
         var claims = new List<Claim>
         {
             new(ClaimTypes.NameIdentifier, user.Id.ToString()),
             new(ClaimTypes.Email, user.Email),
             new(ClaimTypes.Name, user.Name),
-            new("profileId", user.UserProfileId?.ToString() ?? "")
+            new("profileId", user.UserProfileId?.ToString() ?? ""),
         };
 
         var tokenDescriptor = new SecurityTokenDescriptor
@@ -45,7 +40,7 @@ public class JwtService : IJwtService
             SigningCredentials = new SigningCredentials(
                 new SymmetricSecurityKey(_key),
                 SecurityAlgorithms.HmacSha256Signature
-            )
+            ),
         };
 
         var token = tokenHandler.CreateToken(tokenDescriptor);
@@ -55,7 +50,7 @@ public class JwtService : IJwtService
     public ClaimsPrincipal? ValidateToken(string token)
     {
         var tokenHandler = new JwtSecurityTokenHandler();
-        
+
         try
         {
             var validationParameters = new TokenValidationParameters
@@ -67,11 +62,10 @@ public class JwtService : IJwtService
                 ValidateAudience = true,
                 ValidAudience = _configuration["Jwt:Audience"] ?? "FitTrackerApp",
                 ValidateLifetime = true,
-                ClockSkew = TimeSpan.Zero
+                ClockSkew = TimeSpan.Zero,
             };
 
-            var principal = tokenHandler.ValidateToken(token, validationParameters, out _);
-            return principal;
+            return tokenHandler.ValidateToken(token, validationParameters, out _);
         }
         catch
         {

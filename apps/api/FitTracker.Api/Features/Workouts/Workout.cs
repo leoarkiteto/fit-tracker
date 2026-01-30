@@ -6,8 +6,8 @@ public class Workout
     public string Name { get; set; } = string.Empty;
     public string? Description { get; set; }
     public WorkoutGoal Goal { get; set; }
-    public List<DayOfWeekEnum> Days { get; set; } = new();
-    public List<Exercise> Exercises { get; set; } = new();
+    public List<DayOfWeekEnum> Days { get; set; } = [];
+    public List<Exercise> Exercises { get; set; } = [];
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
     public DateTime UpdatedAt { get; set; } = DateTime.UtcNow;
     public bool IsCompleted { get; set; }

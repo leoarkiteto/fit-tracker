@@ -1,5 +1,3 @@
-using System.ComponentModel.DataAnnotations;
-
 namespace FitTracker.Api.Features.Auth;
 
 public record RegisterRequest(

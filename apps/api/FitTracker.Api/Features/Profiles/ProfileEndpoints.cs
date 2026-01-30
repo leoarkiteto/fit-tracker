@@ -1,6 +1,3 @@
-using FitTracker.Api.Shared.Data;
-using Microsoft.EntityFrameworkCore;
-
 namespace FitTracker.Api.Features.Profiles;
 
 public static class ProfileEndpoints
@@ -88,7 +85,8 @@ public static class ProfileEndpoints
                         profile.ExperienceLevel = request.ExperienceLevel.Value;
                     if (request.AvailableDaysPerWeek.HasValue)
                         profile.AvailableDaysPerWeek = request.AvailableDaysPerWeek.Value;
-                    profile.PreferredWorkoutDuration = request.PreferredWorkoutDuration ?? profile.PreferredWorkoutDuration;
+                    profile.PreferredWorkoutDuration =
+                        request.PreferredWorkoutDuration ?? profile.PreferredWorkoutDuration;
                     if (request.EquipmentType.HasValue)
                         profile.EquipmentType = request.EquipmentType.Value;
                     profile.UpdatedAt = DateTime.UtcNow;

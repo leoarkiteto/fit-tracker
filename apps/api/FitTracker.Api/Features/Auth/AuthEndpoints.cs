@@ -1,8 +1,3 @@
-using System.Security.Claims;
-using FitTracker.Api.Features.Profiles;
-using FitTracker.Api.Shared.Data;
-using Microsoft.EntityFrameworkCore;
-
 namespace FitTracker.Api.Features.Auth;
 
 public static class AuthEndpoints
@@ -22,9 +17,10 @@ public static class AuthEndpoints
                     IJwtService jwtService
                 ) =>
                 {
-                    // Verificar se email já existe
+                    // Verificar se email já existe (comparação case-insensitive via normalização)
+                    var emailLower = request.Email.Trim().ToLowerInvariant();
                     var existingUser = await db.Users.FirstOrDefaultAsync(u =>
-                        u.Email.ToLower() == request.Email.ToLower()
+                        u.Email == emailLower
                     );
 
                     if (existingUser is not null)
@@ -43,7 +39,7 @@ public static class AuthEndpoints
                     var user = new User
                     {
                         Id = Guid.NewGuid(),
-                        Email = request.Email.ToLower(),
+                        Email = emailLower,
                         PasswordHash = passwordService.HashPassword(request.Password),
                         Name = request.Name,
                         CreatedAt = DateTime.UtcNow,
@@ -59,7 +55,7 @@ public static class AuthEndpoints
                     var expiresAt = DateTime.UtcNow.AddHours(24);
 
                     return Results.Created(
-                        $"/api/auth/me",
+                        "/api/auth/me",
                         new AuthResponse(
                             token,
                             expiresAt,
@@ -84,8 +80,9 @@ public static class AuthEndpoints
                     IJwtService jwtService
                 ) =>
                 {
+                    var emailLower = request.Email.Trim().ToLowerInvariant();
                     var user = await db.Users.FirstOrDefaultAsync(u =>
-                        u.Email.ToLower() == request.Email.ToLower()
+                        u.Email == emailLower
                     );
 
                     if (user is null)
@@ -159,8 +156,15 @@ public static class AuthEndpoints
                     if (dbUser is null)
                         return Results.NotFound();
 
-                    if (!passwordService.VerifyPassword(request.CurrentPassword, dbUser.PasswordHash))
+                    if (
+                        !passwordService.VerifyPassword(
+                            request.CurrentPassword,
+                            dbUser.PasswordHash
+                        )
+                    )
+                    {
                         return Results.BadRequest(new { message = "Senha atual incorreta" });
+                    }
 
                     dbUser.PasswordHash = passwordService.HashPassword(request.NewPassword);
                     await db.SaveChangesAsync();

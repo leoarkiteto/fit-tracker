@@ -1,19 +1,3 @@
-using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using FitTracker.Api.Features.AI.WorkoutPlanning;
-using FitTracker.Api.Features.Auth;
-using FitTracker.Api.Features.Bioimpedance;
-using FitTracker.Api.Features.Profiles;
-using FitTracker.Api.Features.Workouts;
-using FitTracker.Api.Shared.Data;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using Microsoft.SemanticKernel;
-using Scalar.AspNetCore;
-
 var builder = WebApplication.CreateBuilder(args);
 
 // ============================================
@@ -24,7 +8,9 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.ConfigureHttpJsonOptions(options =>
 {
     options.SerializerOptions.PropertyNameCaseInsensitive = true;
-    options.SerializerOptions.Converters.Add(new JsonStringEnumConverter(JsonNamingPolicy.CamelCase));
+    options.SerializerOptions.Converters.Add(
+        new JsonStringEnumConverter(JsonNamingPolicy.CamelCase)
+    );
 });
 
 // SQLite Database
@@ -46,10 +32,7 @@ var ollamaModel = builder.Configuration["AI:Ollama:Model"] ?? "llama3.2";
 var kernelBuilder = Kernel.CreateBuilder();
 
 #pragma warning disable SKEXP0070 // Ollama connector is experimental
-kernelBuilder.AddOllamaChatCompletion(
-    modelId: ollamaModel,
-    endpoint: new Uri(ollamaEndpoint)
-);
+kernelBuilder.AddOllamaChatCompletion(modelId: ollamaModel, endpoint: new Uri(ollamaEndpoint));
 #pragma warning restore SKEXP0070
 
 var kernel = kernelBuilder.Build();
@@ -89,10 +72,7 @@ builder.Services.AddCors(options =>
 {
     options.AddPolicy(
         "AllowAll",
-        policy =>
-        {
-            policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader();
-        }
+        policy => policy.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader()
     );
 });
 
@@ -125,22 +105,11 @@ builder.Services.AddSwaggerGen(options =>
         }
     );
 
-    options.AddSecurityRequirement(
-        new OpenApiSecurityRequirement
-        {
-            {
-                new OpenApiSecurityScheme
-                {
-                    Reference = new OpenApiReference
-                    {
-                        Type = ReferenceType.SecurityScheme,
-                        Id = "Bearer",
-                    },
-                },
-                Array.Empty<string>()
-            },
-        }
-    );
+    options.AddSecurityRequirement(_ =>
+    {
+        var schemeRef = new OpenApiSecuritySchemeReference("Bearer");
+        return new OpenApiSecurityRequirement { [schemeRef] = [] };
+    });
 });
 
 var app = builder.Build();
@@ -153,11 +122,14 @@ app.UseCors("AllowAll");
 
 // OpenAPI: expor o documento JSON (Swashbuckle) e documentação com Scalar na raiz
 app.UseSwagger();
-app.MapScalarApiReference("/", options =>
-{
-    options.WithTitle("FitTracker API");
-    options.WithOpenApiRoutePattern("/swagger/{documentName}/swagger.json");
-});
+app.MapScalarApiReference(
+    "/",
+    options =>
+    {
+        options.WithTitle("FitTracker API");
+        options.WithOpenApiRoutePattern("/swagger/{documentName}/swagger.json");
+    }
+);
 
 // Authentication & Authorization
 app.UseAuthentication();
@@ -186,6 +158,9 @@ app.MapCompletedWorkoutEndpoints();
 
 // Bioimpedance Feature
 app.MapBioimpedanceEndpoints();
+
+// WaterIntake Feature
+app.MapWaterIntakeEndpoints();
 
 // AI Features
 app.MapWorkoutPlanningEndpoints();

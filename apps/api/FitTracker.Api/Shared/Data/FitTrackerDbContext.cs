@@ -1,16 +1,7 @@
-using FitTracker.Api.Features.Auth;
-using FitTracker.Api.Features.Bioimpedance;
-using FitTracker.Api.Features.Profiles;
-using FitTracker.Api.Features.Workouts;
-using Microsoft.EntityFrameworkCore;
-
 namespace FitTracker.Api.Shared.Data;
 
-public class FitTrackerDbContext : DbContext
+public class FitTrackerDbContext(DbContextOptions<FitTrackerDbContext> options) : DbContext(options)
 {
-    public FitTrackerDbContext(DbContextOptions<FitTrackerDbContext> options)
-        : base(options) { }
-
     // Auth
     public DbSet<User> Users => Set<User>();
 
@@ -24,6 +15,9 @@ public class FitTrackerDbContext : DbContext
 
     // Bioimpedance
     public DbSet<BioimpedanceData> BioimpedanceData => Set<BioimpedanceData>();
+
+    // WaterIntake
+    public DbSet<WaterIntakeEntry> WaterIntakeEntries => Set<WaterIntakeEntry>();
 
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
@@ -99,6 +93,14 @@ public class FitTrackerDbContext : DbContext
         {
             entity.HasKey(e => e.Id);
             entity.Property(e => e.Notes).HasMaxLength(500);
+        });
+
+        // WaterIntakeEntry
+        modelBuilder.Entity<WaterIntakeEntry>(entity =>
+        {
+            entity.HasKey(e => e.Id);
+            entity.Property(e => e.Note).HasMaxLength(200);
+            entity.HasIndex(e => new { e.UserProfileId, e.ConsumedAt });
         });
     }
 }

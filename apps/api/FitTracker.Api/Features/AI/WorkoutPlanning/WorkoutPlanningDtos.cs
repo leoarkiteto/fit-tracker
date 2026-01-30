@@ -1,6 +1,3 @@
-using FitTracker.Api.Features.Profiles;
-using FitTracker.Api.Features.Workouts;
-
 namespace FitTracker.Api.Features.AI.WorkoutPlanning;
 
 /// <summary>
@@ -63,10 +60,7 @@ public record AcceptPlanRequest(
 /// <summary>
 /// Response after accepting a plan
 /// </summary>
-public record AcceptPlanResponse(
-    List<Guid> CreatedWorkoutIds,
-    string Message
-);
+public record AcceptPlanResponse(List<Guid> CreatedWorkoutIds, string Message);
 
 /// <summary>
 /// Context data provided to the AI for planning

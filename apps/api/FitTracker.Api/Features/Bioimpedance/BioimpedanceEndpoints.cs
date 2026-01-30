@@ -1,6 +1,3 @@
-using FitTracker.Api.Shared.Data;
-using Microsoft.EntityFrameworkCore;
-
 namespace FitTracker.Api.Features.Bioimpedance;
 
 public static class BioimpedanceEndpoints

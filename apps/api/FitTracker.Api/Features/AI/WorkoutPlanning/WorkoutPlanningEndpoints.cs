@@ -1,5 +1,3 @@
-using Microsoft.AspNetCore.Mvc;
-
 namespace FitTracker.Api.Features.AI.WorkoutPlanning;
 
 public static class WorkoutPlanningEndpoints
@@ -17,7 +15,8 @@ public static class WorkoutPlanningEndpoints
                 async (
                     [FromBody] GeneratePlanRequest request,
                     IWorkoutPlanningAgent agent,
-                    CancellationToken cancellationToken) =>
+                    CancellationToken cancellationToken
+                ) =>
                 {
                     try
                     {
@@ -32,12 +31,15 @@ public static class WorkoutPlanningEndpoints
                     {
                         return Results.Problem(
                             detail: "Failed to generate workout plan. Please try again.",
-                            statusCode: StatusCodes.Status500InternalServerError);
+                            statusCode: StatusCodes.Status500InternalServerError
+                        );
                     }
                 }
             )
             .WithName("GenerateWorkoutPlan")
-            .WithDescription("Generate a personalized workout plan using AI based on user profile and preferences")
+            .WithDescription(
+                "Generate a personalized workout plan using AI based on user profile and preferences"
+            )
             .Produces<GeneratedPlanResponse>(StatusCodes.Status200OK)
             .Produces(StatusCodes.Status400BadRequest)
             .Produces(StatusCodes.Status500InternalServerError);
@@ -66,7 +68,8 @@ public static class WorkoutPlanningEndpoints
                 async (
                     [FromBody] AcceptPlanRequest request,
                     IWorkoutPlanningAgent agent,
-                    CancellationToken cancellationToken) =>
+                    CancellationToken cancellationToken
+                ) =>
                 {
                     try
                     {
@@ -77,7 +80,8 @@ public static class WorkoutPlanningEndpoints
                     {
                         return Results.Problem(
                             detail: "Failed to save workout plan. Please try again.",
-                            statusCode: StatusCodes.Status500InternalServerError);
+                            statusCode: StatusCodes.Status500InternalServerError
+                        );
                     }
                 }
             )
@@ -95,13 +99,15 @@ public static class WorkoutPlanningEndpoints
                     var ollamaEndpoint = config["AI:Ollama:Endpoint"];
                     var ollamaModel = config["AI:Ollama:Model"];
 
-                    return Results.Ok(new
-                    {
-                        available = !string.IsNullOrEmpty(ollamaEndpoint),
-                        provider = "Ollama",
-                        model = ollamaModel ?? "unknown",
-                        endpoint = ollamaEndpoint ?? "not configured"
-                    });
+                    return Results.Ok(
+                        new
+                        {
+                            available = !string.IsNullOrEmpty(ollamaEndpoint),
+                            provider = "Ollama",
+                            model = ollamaModel ?? "unknown",
+                            endpoint = ollamaEndpoint ?? "not configured",
+                        }
+                    );
                 }
             )
             .WithName("GetAIPlanningStatus")

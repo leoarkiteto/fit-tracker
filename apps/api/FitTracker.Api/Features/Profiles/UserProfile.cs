@@ -3,7 +3,7 @@ namespace FitTracker.Api.Features.Profiles;
 public class UserProfile
 {
     public Guid Id { get; set; }
-    public string Name { get; set; } = "Atleta";
+    public string Name { get; set; } = "John Doe";
     public int? Age { get; set; }
     public double? Height { get; set; } // cm
     public double? CurrentWeight { get; set; } // kg
@@ -23,12 +23,12 @@ public enum ExperienceLevel
 {
     Beginner,
     Intermediate,
-    Advanced
+    Advanced,
 }
 
 public enum EquipmentType
 {
-    Gym,       // Full gym equipment
-    Home,      // Basic home equipment (dumbbells, bands)
-    Minimal    // Bodyweight only
+    Gym, // Full gym equipment
+    Home, // Basic home equipment (dumbbells, bands)
+    Minimal, // Bodyweight only
 }

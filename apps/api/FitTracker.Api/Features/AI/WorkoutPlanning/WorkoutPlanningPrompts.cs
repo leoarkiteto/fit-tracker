@@ -107,29 +107,32 @@ public static class WorkoutPlanningPrompts
     /// <summary>
     /// Helper to convert enums to user-friendly strings for prompts
     /// </summary>
-    public static string GetGoalDescription(Workouts.WorkoutGoal goal) => goal switch
-    {
-        Workouts.WorkoutGoal.Hypertrophy => "Build muscle mass and size",
-        Workouts.WorkoutGoal.Strength => "Increase strength and power",
-        Workouts.WorkoutGoal.Endurance => "Improve muscular endurance and stamina",
-        Workouts.WorkoutGoal.WeightLoss => "Lose body fat while preserving muscle",
-        Workouts.WorkoutGoal.Maintenance => "Maintain current fitness level",
-        _ => "General fitness improvement"
-    };
+    public static string GetGoalDescription(WorkoutGoal goal) =>
+        goal switch
+        {
+            WorkoutGoal.Hypertrophy => "Build muscle mass and size",
+            WorkoutGoal.Strength => "Increase strength and power",
+            WorkoutGoal.Endurance => "Improve muscular endurance and stamina",
+            WorkoutGoal.WeightLoss => "Lose body fat while preserving muscle",
+            WorkoutGoal.Maintenance => "Maintain current fitness level",
+            _ => "General fitness improvement",
+        };
 
-    public static string GetExperienceDescription(Profiles.ExperienceLevel level) => level switch
-    {
-        Profiles.ExperienceLevel.Beginner => "Beginner (less than 1 year of consistent training)",
-        Profiles.ExperienceLevel.Intermediate => "Intermediate (1-3 years of consistent training)",
-        Profiles.ExperienceLevel.Advanced => "Advanced (3+ years of consistent training)",
-        _ => "Unknown experience level"
-    };
+    public static string GetExperienceDescription(ExperienceLevel level) =>
+        level switch
+        {
+            ExperienceLevel.Beginner => "Beginner (less than 1 year of consistent training)",
+            ExperienceLevel.Intermediate => "Intermediate (1-3 years of consistent training)",
+            ExperienceLevel.Advanced => "Advanced (3+ years of consistent training)",
+            _ => "Unknown experience level",
+        };
 
-    public static string GetEquipmentDescription(Profiles.EquipmentType equipment) => equipment switch
-    {
-        Profiles.EquipmentType.Gym => "Full gym (barbells, dumbbells, cables, machines)",
-        Profiles.EquipmentType.Home => "Home setup (dumbbells, resistance bands, pull-up bar)",
-        Profiles.EquipmentType.Minimal => "Minimal/bodyweight only",
-        _ => "Unknown equipment"
-    };
+    public static string GetEquipmentDescription(EquipmentType equipment) =>
+        equipment switch
+        {
+            EquipmentType.Gym => "Full gym (barbells, dumbbells, cables, machines)",
+            EquipmentType.Home => "Home setup (dumbbells, resistance bands, pull-up bar)",
+            EquipmentType.Minimal => "Minimal/bodyweight only",
+            _ => "Unknown equipment",
+        };
 }
