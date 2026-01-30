@@ -5,6 +5,7 @@ export { WorkoutDetailScreen } from "./WorkoutDetailScreen";
 export { ExerciseSessionScreen } from "./ExerciseSessionScreen";
 export { BioimpedanceFormScreen } from "./BioimpedanceFormScreen";
 export { BioimpedanceHistoryScreen } from "./BioimpedanceHistoryScreen";
+export { WaterScreen } from "./WaterScreen";
 export { ProfileScreen } from "./ProfileScreen";
 export { SignInScreen } from "./SignInScreen";
 export { SignUpScreen } from "./SignUpScreen";

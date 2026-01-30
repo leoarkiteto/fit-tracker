@@ -8,6 +8,7 @@ import {
   ExerciseSessionScreen,
   BioimpedanceFormScreen,
   BioimpedanceHistoryScreen,
+  WaterScreen,
   ChangePasswordScreen,
   WorkoutPlanningScreen,
 } from "../screens";
@@ -53,6 +54,7 @@ export const RootNavigator: React.FC = () => {
         name="BioimpedanceHistory"
         component={BioimpedanceHistoryScreen}
       />
+      <Stack.Screen name="Water" component={WaterScreen} />
       <Stack.Screen
         name="ChangePassword"
         component={ChangePasswordScreen}

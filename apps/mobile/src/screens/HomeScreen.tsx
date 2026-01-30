@@ -19,6 +19,8 @@ import { WorkoutCard, Card, WorkoutCalendar } from "../components";
 import { colors, spacing, borderRadius, typography, shadows } from "../theme";
 import { RootStackParamList } from "../navigation/types";
 import { DAYS_OF_WEEK, DayOfWeek } from "../types";
+import { waterApi } from "../services";
+import type { DailyWaterSummary } from "../types";
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<RootStackParamList>;
 
@@ -26,6 +28,7 @@ export const HomeScreen: React.FC = () => {
   const navigation = useNavigation<HomeScreenNavigationProp>();
   const {
     profile,
+    profileId,
     workouts,
     totalWorkoutsCompleted,
     workoutsThisWeek,
@@ -40,12 +43,49 @@ export const HomeScreen: React.FC = () => {
   } = useApp();
 
   const [refreshing, setRefreshing] = React.useState(false);
+  const [waterSummary, setWaterSummary] = React.useState<DailyWaterSummary | null>(null);
+  const [waterAdding, setWaterAdding] = React.useState(false);
+
+  const todayDateUtc = () => new Date().toISOString().slice(0, 10);
+
+  const loadWater = useCallback(async () => {
+    if (!profileId) return;
+    try {
+      const summary = await waterApi.getDay(profileId, todayDateUtc());
+      setWaterSummary(summary);
+    } catch (e) {
+      console.error("Error loading water:", e);
+    }
+  }, [profileId]);
+
+  React.useEffect(() => {
+    if (profileId && !isLoading) {
+      loadWater();
+    }
+  }, [profileId, isLoading, loadWater]);
+
+  const addWater = useCallback(
+    async (amountMl: number) => {
+      if (!profileId || waterAdding) return;
+      setWaterAdding(true);
+      try {
+        await waterApi.add(profileId, amountMl);
+        await loadWater();
+      } catch (e) {
+        console.error("Error adding water:", e);
+      } finally {
+        setWaterAdding(false);
+      }
+    },
+    [profileId, waterAdding, loadWater]
+  );
 
   const onRefresh = useCallback(async () => {
     setRefreshing(true);
     await refreshData();
+    await loadWater();
     setRefreshing(false);
-  }, [refreshData]);
+  }, [refreshData, loadWater]);
 
   // Get today's day of week
   const today = new Date()
@@ -143,6 +183,69 @@ export const HomeScreen: React.FC = () => {
             </View>
             <Text style={styles.statNumber}>{totalMinutesSpent}</Text>
             <Text style={styles.statLabel}>Minutos{"\n"}Total</Text>
+          </Card>
+        </View>
+
+        {/* Water today */}
+        <View style={styles.section}>
+          <View style={styles.sectionHeader}>
+            <Text style={styles.sectionTitle}>Água hoje</Text>
+            <TouchableOpacity onPress={() => navigation.navigate("Water")}>
+              <Text style={styles.seeAll}>Ver detalhes</Text>
+            </TouchableOpacity>
+          </View>
+          <Card style={styles.waterCard}>
+            <View style={styles.waterHeader}>
+              <View style={styles.waterIconContainer}>
+                <Ionicons name="water" size={24} color="#0891B2" />
+              </View>
+              <View style={styles.waterSummary}>
+                <Text style={styles.waterLabel}>Consumido / Meta</Text>
+                <Text style={styles.waterValue}>
+                  {(waterSummary ? waterSummary.totalMl / 1000 : 0).toFixed(1)} L /{" "}
+                  {(waterSummary ? waterSummary.goalMl / 1000 : 2).toFixed(1)} L
+                </Text>
+              </View>
+            </View>
+            <View style={styles.waterProgressBar}>
+              <View
+                style={[
+                  styles.waterProgressFill,
+                  {
+                    width: `${
+                      waterSummary && waterSummary.goalMl > 0
+                        ? Math.min(
+                            100,
+                            (waterSummary.totalMl / waterSummary.goalMl) * 100
+                          )
+                        : 0
+                    }%`,
+                  },
+                ]}
+              />
+            </View>
+            <View style={styles.waterQuickButtons}>
+              <TouchableOpacity
+                style={[
+                  styles.waterQuickButton,
+                  waterAdding && styles.waterQuickButtonDisabled,
+                ]}
+                onPress={() => addWater(250)}
+                disabled={waterAdding}
+              >
+                <Text style={styles.waterQuickButtonText}>+250 ml</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[
+                  styles.waterQuickButton,
+                  waterAdding && styles.waterQuickButtonDisabled,
+                ]}
+                onPress={() => addWater(500)}
+                disabled={waterAdding}
+              >
+                <Text style={styles.waterQuickButtonText}>+500 ml</Text>
+              </TouchableOpacity>
+            </View>
           </Card>
         </View>
 
@@ -302,6 +405,19 @@ export const HomeScreen: React.FC = () => {
                 <Ionicons name="sparkles" size={28} color={colors.white} />
               </LinearGradient>
               <Text style={styles.quickActionText}>AI Planner</Text>
+            </TouchableOpacity>
+
+            <TouchableOpacity
+              onPress={() => navigation.navigate("Water")}
+              style={styles.quickAction}
+            >
+              <LinearGradient
+                colors={["#0891B2", "#22D3EE"]}
+                style={styles.quickActionGradient}
+              >
+                <Ionicons name="water" size={28} color={colors.white} />
+              </LinearGradient>
+              <Text style={styles.quickActionText}>Água</Text>
             </TouchableOpacity>
 
             <TouchableOpacity
@@ -531,5 +647,65 @@ const styles = StyleSheet.create({
     fontSize: typography.xs,
     color: colors.textSecondary,
     fontWeight: typography.medium,
+  },
+  waterCard: {
+    padding: spacing.lg,
+  },
+  waterHeader: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: spacing.md,
+  },
+  waterIconContainer: {
+    width: 44,
+    height: 44,
+    borderRadius: borderRadius.md,
+    backgroundColor: "#E0F2F1",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  waterSummary: {
+    marginLeft: spacing.md,
+  },
+  waterLabel: {
+    fontSize: typography.xs,
+    color: colors.textSecondary,
+  },
+  waterValue: {
+    fontSize: typography.xl,
+    fontWeight: typography.bold,
+    color: colors.textPrimary,
+  },
+  waterProgressBar: {
+    height: 6,
+    backgroundColor: colors.surfaceSecondary,
+    borderRadius: 3,
+    overflow: "hidden",
+    marginBottom: spacing.md,
+  },
+  waterProgressFill: {
+    height: "100%",
+    backgroundColor: "#0891B2",
+    borderRadius: 3,
+  },
+  waterQuickButtons: {
+    flexDirection: "row",
+    gap: spacing.sm,
+  },
+  waterQuickButton: {
+    flex: 1,
+    paddingVertical: spacing.sm,
+    paddingHorizontal: spacing.md,
+    backgroundColor: colors.surfaceSecondary,
+    borderRadius: borderRadius.md,
+    alignItems: "center",
+  },
+  waterQuickButtonDisabled: {
+    opacity: 0.6,
+  },
+  waterQuickButtonText: {
+    fontSize: typography.sm,
+    fontWeight: typography.semibold,
+    color: colors.textPrimary,
   },
 });

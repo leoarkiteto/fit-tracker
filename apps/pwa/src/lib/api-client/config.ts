@@ -39,6 +39,13 @@ export const API_ENDPOINTS = {
   latestBioimpedance: (profileId: string) =>
     `/api/profiles/${profileId}/bioimpedance/latest`,
 
+  // Water intake
+  water: (profileId: string) => `/api/profiles/${profileId}/water`,
+  waterByDate: (profileId: string, date: string) =>
+    `/api/profiles/${profileId}/water?date=${date}`,
+  waterEntry: (profileId: string, entryId: string) =>
+    `/api/profiles/${profileId}/water/${entryId}`,
+
   // Completed Workouts
   completedWorkouts: (profileId: string) =>
     `/api/profiles/${profileId}/completed-workouts`,

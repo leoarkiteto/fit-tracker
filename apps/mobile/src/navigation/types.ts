@@ -18,6 +18,7 @@ export type RootStackParamList = {
   ExerciseSession: { workoutId: string; exerciseId: string };
   BioimpedanceForm: { bioimpedanceId?: string };
   BioimpedanceHistory: undefined;
+  Water: undefined;
   Profile: undefined;
   ChangePassword: undefined;
   WorkoutPlanning: undefined;

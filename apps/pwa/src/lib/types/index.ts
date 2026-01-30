@@ -149,6 +149,21 @@ export interface WorkoutStats {
   totalMinutesSpent: number;
 }
 
+// Water intake
+export interface WaterIntakeEntry {
+  id: string;
+  amountMl: number;
+  consumedAt: string;
+  note?: string;
+}
+
+export interface DailyWaterSummary {
+  date: string;
+  totalMl: number;
+  goalMl: number;
+  entries: WaterIntakeEntry[];
+}
+
 // App state
 export interface AppState {
   profile: UserProfile;

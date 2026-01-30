@@ -2,8 +2,8 @@
 
 import { useState, useEffect } from "react";
 import { useAuth } from "@/lib/auth-context";
-import { workoutsApi, completedWorkoutsApi } from "../../../lib/api-client";
-import type { Workout, WorkoutStats } from "../../../lib/types";
+import { workoutsApi, completedWorkoutsApi, waterApi } from "../../../lib/api-client";
+import type { Workout, WorkoutStats, DailyWaterSummary } from "../../../lib/types";
 import { Card, CardContent, Button } from "@/components/ui";
 import Link from "next/link";
 import {
@@ -17,14 +17,29 @@ import {
   Loader2,
   Plus,
   Sparkles,
+  Droplets,
 } from "lucide-react";
 
 export default function DashboardPage() {
   const { user } = useAuth();
   const [todayWorkouts, setTodayWorkouts] = useState<Workout[]>([]);
   const [stats, setStats] = useState<WorkoutStats | null>(null);
+  const [waterSummary, setWaterSummary] = useState<DailyWaterSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [completedToday, setCompletedToday] = useState<Set<string>>(new Set());
+  const [waterAdding, setWaterAdding] = useState(false);
+
+  const todayDateUtc = () => new Date().toISOString().slice(0, 10);
+
+  const loadWater = async () => {
+    if (!user?.profileId) return;
+    try {
+      const summary = await waterApi.getDay(user.profileId, todayDateUtc());
+      setWaterSummary(summary);
+    } catch (e) {
+      console.error("Error loading water:", e);
+    }
+  };
 
   useEffect(() => {
     const loadData = async () => {
@@ -34,14 +49,16 @@ export default function DashboardPage() {
       }
 
       try {
-        const [workoutsData, statsData, completedData] = await Promise.all([
+        const [workoutsData, statsData, completedData, waterData] = await Promise.all([
           workoutsApi.getToday(user.profileId),
           completedWorkoutsApi.getStats(user.profileId),
           completedWorkoutsApi.getAll(user.profileId),
+          waterApi.getDay(user.profileId, todayDateUtc()),
         ]);
 
         setTodayWorkouts(workoutsData);
         setStats(statsData);
+        setWaterSummary(waterData);
 
         // Check which workouts were completed today
         const today = new Date().toISOString().split("T")[0];
@@ -60,6 +77,19 @@ export default function DashboardPage() {
 
     loadData();
   }, [user?.profileId]);
+
+  const addWater = async (amountMl: number) => {
+    if (!user?.profileId || waterAdding) return;
+    setWaterAdding(true);
+    try {
+      await waterApi.add(user.profileId, amountMl);
+      await loadWater();
+    } catch (e) {
+      console.error("Error adding water:", e);
+    } finally {
+      setWaterAdding(false);
+    }
+  };
 
   const formatMinutes = (minutes: number) => {
     const hours = Math.floor(minutes / 60);
@@ -134,6 +164,67 @@ export default function DashboardPage() {
                   {formatMinutes(stats?.totalMinutesSpent || 0)}
                 </p>
               </div>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+
+      {/* Water today */}
+      <div className="mb-8 animate-slide-up" style={{ animationDelay: "0.35s" }}>
+        <div className="flex items-center justify-between mb-4">
+          <h2 className="text-xl font-semibold text-surface-900">
+            Água hoje
+          </h2>
+          <Link
+            href="/water"
+            className="text-primary-500 hover:text-primary-600 text-sm font-medium flex items-center gap-1"
+          >
+            Ver detalhes
+            <ChevronRight className="w-4 h-4" />
+          </Link>
+        </div>
+        <Card>
+          <CardContent className="p-5">
+            <div className="flex items-center gap-4 mb-4">
+              <div className="w-12 h-12 rounded-xl bg-cyan-100 flex items-center justify-center">
+                <Droplets className="w-6 h-6 text-cyan-600" />
+              </div>
+              <div className="flex-1 min-w-0">
+                <p className="text-surface-600 text-sm">Consumido / Meta</p>
+                <p className="text-2xl font-bold text-surface-900">
+                  {(waterSummary ? waterSummary.totalMl / 1000 : 0).toFixed(1)} L / {(waterSummary ? waterSummary.goalMl / 1000 : 2).toFixed(1)} L
+                </p>
+              </div>
+            </div>
+            <div className="w-full h-2 bg-surface-200 rounded-full overflow-hidden mb-4">
+              <div
+                className="h-full bg-cyan-500 rounded-full transition-all duration-300"
+                style={{
+                  width: `${waterSummary && waterSummary.goalMl > 0
+                    ? Math.min(100, (waterSummary.totalMl / waterSummary.goalMl) * 100)
+                    : 0}%`,
+                }}
+              />
+            </div>
+            <div className="flex gap-2">
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => addWater(250)}
+                disabled={waterAdding}
+                className="flex-1"
+              >
+                +250 ml
+              </Button>
+              <Button
+                size="sm"
+                variant="secondary"
+                onClick={() => addWater(500)}
+                disabled={waterAdding}
+                className="flex-1"
+              >
+                +500 ml
+              </Button>
             </div>
           </CardContent>
         </Card>
@@ -272,6 +363,16 @@ export default function DashboardPage() {
                   <Sparkles className="w-6 h-6 text-amber-500" />
                 </div>
                 <p className="text-sm font-medium text-surface-700">AI Planner</p>
+              </CardContent>
+            </Card>
+          </Link>
+          <Link href="/water">
+            <Card hover className="h-full">
+              <CardContent className="p-5 text-center">
+                <div className="w-12 h-12 rounded-xl bg-cyan-100 flex items-center justify-center mx-auto mb-2">
+                  <Droplets className="w-6 h-6 text-cyan-600" />
+                </div>
+                <p className="text-sm font-medium text-surface-700">Água</p>
               </CardContent>
             </Card>
           </Link>

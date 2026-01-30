@@ -108,6 +108,21 @@ export interface BioimpedanceData {
   notes?: string;
 }
 
+// Consumo de água
+export interface WaterIntakeEntry {
+  id: string;
+  amountMl: number;
+  consumedAt: string;
+  note?: string;
+}
+
+export interface DailyWaterSummary {
+  date: string;
+  totalMl: number;
+  goalMl: number;
+  entries: WaterIntakeEntry[];
+}
+
 // Perfil do usuário
 export interface UserProfile {
   id?: string; // ID do perfil na API (undefined se ainda não sincronizado)

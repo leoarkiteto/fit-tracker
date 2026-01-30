@@ -9,12 +9,14 @@ import {
   Activity,
   User,
   LogOut,
+  Droplets,
 } from "lucide-react";
 import { useAuth } from "@/lib/auth-context";
 
 const navItems = [
   { href: "/dashboard", label: "Home", icon: Home },
   { href: "/workouts", label: "Workouts", icon: LayoutList },
+  { href: "/water", label: "Água", icon: Droplets },
   { href: "/bioimpedance", label: "Body", icon: Activity },
   { href: "/profile", label: "Profile", icon: User },
 ];

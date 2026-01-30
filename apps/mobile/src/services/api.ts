@@ -10,6 +10,8 @@ import {
   WorkoutGoal,
   DayOfWeek,
   MuscleGroup,
+  WaterIntakeEntry,
+  DailyWaterSummary,
 } from "../types";
 
 // Helper para verificar se um ID é um GUID válido
@@ -79,6 +81,20 @@ interface ApiWorkoutStats {
   totalWorkoutsCompleted: number;
   workoutsThisWeek: number;
   totalMinutesSpent: number;
+}
+
+interface ApiWaterIntakeEntry {
+  id: string;
+  amountMl: number;
+  consumedAt: string;
+  note: string | null;
+}
+
+interface ApiDailyWaterSummary {
+  date: string;
+  totalMl: number;
+  goalMl: number;
+  entries: ApiWaterIntakeEntry[];
 }
 
 // Tipos de autenticação
@@ -186,6 +202,22 @@ const convertApiWorkout = (api: ApiWorkout): Workout => ({
   updatedAt: api.updatedAt,
   isCompleted: api.isCompleted,
   completedAt: api.completedAt ?? undefined,
+});
+
+const convertApiWaterEntry = (api: ApiWaterIntakeEntry): WaterIntakeEntry => ({
+  id: api.id,
+  amountMl: api.amountMl,
+  consumedAt: api.consumedAt,
+  note: api.note ?? undefined,
+});
+
+const convertApiDailyWaterSummary = (
+  api: ApiDailyWaterSummary
+): DailyWaterSummary => ({
+  date: api.date,
+  totalMl: api.totalMl,
+  goalMl: api.goalMl,
+  entries: api.entries.map(convertApiWaterEntry),
 });
 
 const convertApiBioimpedance = (api: ApiBioimpedance): BioimpedanceData => ({
@@ -338,6 +370,48 @@ export const workoutsApi = {
     await fetchApi<void>(API_ENDPOINTS.workout(profileId, id), {
       method: "DELETE",
     });
+  },
+};
+
+// ============= Water Intake API =============
+
+export const waterApi = {
+  getDay: async (
+    profileId: string,
+    date: string
+  ): Promise<DailyWaterSummary> => {
+    const data = await fetchApi<ApiDailyWaterSummary>(
+      API_ENDPOINTS.waterByDate(profileId, date)
+    );
+    return convertApiDailyWaterSummary(data);
+  },
+
+  add: async (
+    profileId: string,
+    amountMl: number,
+    consumedAt?: string
+  ): Promise<WaterIntakeEntry> => {
+    const data = await fetchApi<ApiWaterIntakeEntry>(
+      API_ENDPOINTS.water(profileId),
+      {
+        method: "POST",
+        body: JSON.stringify({
+          amountMl,
+          consumedAt: consumedAt ?? null,
+        }),
+      }
+    );
+    return convertApiWaterEntry(data);
+  },
+
+  deleteEntry: async (
+    profileId: string,
+    entryId: string
+  ): Promise<void> => {
+    await fetchApi<void>(
+      API_ENDPOINTS.waterEntry(profileId, entryId),
+      { method: "DELETE" }
+    );
   },
 };
 
