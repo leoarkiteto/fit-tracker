@@ -28,16 +28,19 @@ export default function DashboardPage() {
   const [loading, setLoading] = useState(true);
   const [completedToday, setCompletedToday] = useState<Set<string>>(new Set());
   const [waterAdding, setWaterAdding] = useState(false);
+  const [waterError, setWaterError] = useState<string | null>(null);
 
   const todayDateUtc = () => new Date().toISOString().slice(0, 10);
 
   const loadWater = async () => {
     if (!user?.profileId) return;
     try {
+      setWaterError(null);
       const summary = await waterApi.getDay(user.profileId, todayDateUtc());
       setWaterSummary(summary);
     } catch (e) {
       console.error("Error loading water:", e);
+      setWaterSummary({ date: todayDateUtc(), totalMl: 0, goalMl: 2000, entries: [] });
     }
   };
 
@@ -49,18 +52,15 @@ export default function DashboardPage() {
       }
 
       try {
-        const [workoutsData, statsData, completedData, waterData] = await Promise.all([
+        const [workoutsData, statsData, completedData] = await Promise.all([
           workoutsApi.getToday(user.profileId),
           completedWorkoutsApi.getStats(user.profileId),
           completedWorkoutsApi.getAll(user.profileId),
-          waterApi.getDay(user.profileId, todayDateUtc()),
         ]);
 
         setTodayWorkouts(workoutsData);
         setStats(statsData);
-        setWaterSummary(waterData);
 
-        // Check which workouts were completed today
         const today = new Date().toISOString().split("T")[0];
         const completedTodayIds = new Set(
           completedData
@@ -68,6 +68,8 @@ export default function DashboardPage() {
             .map((c) => c.workoutId)
         );
         setCompletedToday(completedTodayIds);
+
+        await loadWater();
       } catch (error) {
         console.error("Error loading dashboard data:", error);
       } finally {
@@ -81,11 +83,13 @@ export default function DashboardPage() {
   const addWater = async (amountMl: number) => {
     if (!user?.profileId || waterAdding) return;
     setWaterAdding(true);
+    setWaterError(null);
     try {
       await waterApi.add(user.profileId, amountMl);
       await loadWater();
     } catch (e) {
       console.error("Error adding water:", e);
+      setWaterError("Não foi possível adicionar. Tente novamente.");
     } finally {
       setWaterAdding(false);
     }
@@ -206,6 +210,9 @@ export default function DashboardPage() {
                 }}
               />
             </div>
+            {waterError && (
+              <p className="text-error text-sm mb-2">{waterError}</p>
+            )}
             <div className="flex gap-2">
               <Button
                 size="sm"

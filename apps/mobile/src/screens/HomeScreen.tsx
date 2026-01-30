@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   RefreshControl,
   ActivityIndicator,
+  Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
@@ -73,6 +74,10 @@ export const HomeScreen: React.FC = () => {
         await loadWater();
       } catch (e) {
         console.error("Error adding water:", e);
+        Alert.alert(
+          "Erro",
+          "Não foi possível adicionar. Verifique a conexão e tente novamente."
+        );
       } finally {
         setWaterAdding(false);
       }

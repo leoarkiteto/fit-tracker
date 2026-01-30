@@ -74,6 +74,10 @@ export const WaterScreen: React.FC = () => {
       await loadWater();
     } catch (e) {
       console.error("Error adding water:", e);
+      Alert.alert(
+        "Erro",
+        "Não foi possível adicionar. Verifique a conexão e tente novamente."
+      );
     } finally {
       setAdding(false);
     }

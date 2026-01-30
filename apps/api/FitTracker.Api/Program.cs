@@ -135,11 +135,50 @@ app.MapScalarApiReference(
 app.UseAuthentication();
 app.UseAuthorization();
 
-// Garantir que o banco de dados existe
+// Garantir que o banco de dados existe e que tabelas novas existem
 using (var scope = app.Services.CreateScope())
 {
     var db = scope.ServiceProvider.GetRequiredService<FitTrackerDbContext>();
     db.Database.EnsureCreated();
+
+    // EnsureCreated() não adiciona tabelas a um DB já existente.
+    // Garantir que WaterIntakeEntries existe (para DBs criados antes desta feature).
+    if (db.Database.IsSqlite())
+    {
+        var conn = db.Database.GetDbConnection();
+        conn.Open();
+        try
+        {
+            using var checkCmd = conn.CreateCommand();
+            checkCmd.CommandText =
+                "SELECT name FROM sqlite_master WHERE type='table' AND name='WaterIntakeEntries'";
+            var exists = checkCmd.ExecuteScalar();
+            if (exists == null || exists == DBNull.Value)
+            {
+                using var createCmd = conn.CreateCommand();
+                createCmd.CommandText =
+                    """
+                    CREATE TABLE WaterIntakeEntries (
+                        Id TEXT NOT NULL PRIMARY KEY,
+                        UserProfileId TEXT NOT NULL,
+                        AmountMl INTEGER NOT NULL,
+                        ConsumedAt TEXT NOT NULL,
+                        Note TEXT
+                    );
+                    """;
+                createCmd.ExecuteNonQuery();
+
+                using var indexCmd = conn.CreateCommand();
+                indexCmd.CommandText =
+                    "CREATE INDEX IX_WaterIntakeEntries_UserProfileId_ConsumedAt ON WaterIntakeEntries (UserProfileId, ConsumedAt);";
+                indexCmd.ExecuteNonQuery();
+            }
+        }
+        finally
+        {
+            conn.Close();
+        }
+    }
 }
 
 // ============================================
