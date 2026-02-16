@@ -76,41 +76,54 @@ builder.Services.AddCors(options =>
     );
 });
 
-// Swagger/OpenAPI
+// OpenAPI (built-in)
 builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen(options =>
-{
-    options.SwaggerDoc(
-        "v1",
-        new OpenApiInfo
-        {
-            Title = "FitTracker API",
-            Version = "v1",
-            Description =
-                "API para o aplicativo FitTracker - Gerenciamento de treinos e bioimpedância",
-        }
-    );
-
-    // Configurar Swagger para suportar JWT
-    options.AddSecurityDefinition(
-        "Bearer",
-        new OpenApiSecurityScheme
-        {
-            Name = "Authorization",
-            Type = SecuritySchemeType.ApiKey,
-            Scheme = "Bearer",
-            BearerFormat = "JWT",
-            In = ParameterLocation.Header,
-            Description = "Insira o token JWT no formato: Bearer {seu_token}",
-        }
-    );
-
-    options.AddSecurityRequirement(_ =>
+builder.Services.AddOpenApi(
+    "v1",
+    options =>
     {
-        var schemeRef = new OpenApiSecuritySchemeReference("Bearer");
-        return new OpenApiSecurityRequirement { [schemeRef] = [] };
-    });
-});
+        options.AddDocumentTransformer(
+            (document, __, _) =>
+            {
+                document.Info = new OpenApiInfo
+                {
+                    Title = "FitTracker API",
+                    Version = "v1",
+                    Description =
+                        "API para o aplicativo FitTracker - Gerenciamento de treinos e bioimpedância",
+                };
+
+                document.Components ??= new OpenApiComponents();
+                document.Components.SecuritySchemes = new Dictionary<string, IOpenApiSecurityScheme>
+                {
+                    ["Bearer"] = new OpenApiSecurityScheme
+                    {
+                        Name = "Authorization",
+                        Type = SecuritySchemeType.ApiKey,
+                        Scheme = "Bearer",
+                        BearerFormat = "JWT",
+                        In = ParameterLocation.Header,
+                        Description = "Insira o token JWT no formato: Bearer {seu_token}",
+                    },
+                };
+
+                var bearerRef = new OpenApiSecuritySchemeReference("Bearer", document, null);
+                if (document.Paths is not null)
+                {
+                    foreach (var operation in document.Paths.Values.SelectMany(p => p.Operations))
+                    {
+                        operation.Value.Security ??= [];
+                        operation.Value.Security.Add(
+                            new OpenApiSecurityRequirement { [bearerRef] = [] }
+                        );
+                    }
+                }
+
+                return Task.CompletedTask;
+            }
+        );
+    }
+);
 
 var app = builder.Build();
 
@@ -120,14 +133,14 @@ var app = builder.Build();
 
 app.UseCors("AllowAll");
 
-// OpenAPI: expor o documento JSON (Swashbuckle) e documentação com Scalar na raiz
-app.UseSwagger();
+// OpenAPI: expor o documento JSON e documentação com Scalar na raiz
+app.MapOpenApi();
 app.MapScalarApiReference(
     "/",
     options =>
     {
         options.WithTitle("FitTracker API");
-        options.WithOpenApiRoutePattern("/swagger/{documentName}/swagger.json");
+        options.WithOpenApiRoutePattern("/openapi/{documentName}.json");
     }
 );
 
@@ -156,8 +169,7 @@ using (var scope = app.Services.CreateScope())
             if (exists == null || exists == DBNull.Value)
             {
                 using var createCmd = conn.CreateCommand();
-                createCmd.CommandText =
-                    """
+                createCmd.CommandText = """
                     CREATE TABLE WaterIntakeEntries (
                         Id TEXT NOT NULL PRIMARY KEY,
                         UserProfileId TEXT NOT NULL,

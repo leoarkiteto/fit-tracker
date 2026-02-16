@@ -8,19 +8,13 @@ public static class WaterIntakeEndpoints
 
     public static void MapWaterIntakeEndpoints(this WebApplication app)
     {
-        var group = app
-            .MapGroup("/api/profiles/{profileId:guid}/water")
-            .WithTags("WaterIntake");
+        var group = app.MapGroup("/api/profiles/{profileId:guid}/water").WithTags("WaterIntake");
 
         // GET /api/profiles/{profileId}/water?date=yyyy-MM-dd - Consumo do dia (total, meta, entradas)
         group
             .MapGet(
                 "/",
-                async (
-                    Guid profileId,
-                    [FromQuery] string? date,
-                    FitTrackerDbContext db
-                ) =>
+                async (Guid profileId, [FromQuery] string? date, FitTrackerDbContext db) =>
                 {
                     var profile = await db.UserProfiles.FindAsync(profileId);
                     if (profile is null)
@@ -31,8 +25,7 @@ public static class WaterIntakeEndpoints
                     var end = start.AddDays(1);
 
                     var entries = await db
-                        .WaterIntakeEntries
-                        .Where(e =>
+                        .WaterIntakeEntries.Where(e =>
                             e.UserProfileId == profileId
                             && e.ConsumedAt >= start
                             && e.ConsumedAt < end
@@ -63,20 +56,18 @@ public static class WaterIntakeEndpoints
         group
             .MapPost(
                 "/",
-                async (
-                    Guid profileId,
-                    CreateWaterIntakeRequest request,
-                    FitTrackerDbContext db
-                ) =>
+                async (Guid profileId, CreateWaterIntakeRequest request, FitTrackerDbContext db) =>
                 {
                     var profileExists = await db.UserProfiles.AnyAsync(p => p.Id == profileId);
                     if (!profileExists)
                         return Results.NotFound("Profile not found");
 
                     if (request.AmountMl <= 0 || request.AmountMl > MaxAmountMlPerEntry)
+                    {
                         return Results.BadRequest(
                             $"AmountMl must be between 1 and {MaxAmountMlPerEntry}."
                         );
+                    }
 
                     var consumedAt = request.ConsumedAt ?? DateTime.UtcNow;
                     var entry = new WaterIntakeEntry
@@ -129,11 +120,19 @@ public static class WaterIntakeEndpoints
     {
         if (
             !string.IsNullOrWhiteSpace(date)
-            && DateTime.TryParse(date, null, System.Globalization.DateTimeStyles.AssumeUniversal, out var parsed)
+            && DateTime.TryParse(
+                date,
+                null,
+                System.Globalization.DateTimeStyles.AssumeUniversal,
+                out var parsed
+            )
         )
+        {
             return parsed.Kind == DateTimeKind.Unspecified
                 ? DateTime.SpecifyKind(parsed, DateTimeKind.Utc)
                 : parsed.ToUniversalTime();
+        }
+
         return DateTime.UtcNow;
     }
 

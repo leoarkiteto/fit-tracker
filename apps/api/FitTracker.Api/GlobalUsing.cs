@@ -14,6 +14,7 @@ global using FitTracker.Api.Features.Workouts;
 global using FitTracker.Api.Shared.Data;
 global using Microsoft.AspNetCore.Authentication.JwtBearer;
 global using Microsoft.AspNetCore.Mvc;
+global using Microsoft.AspNetCore.OpenApi;
 global using Microsoft.EntityFrameworkCore;
 global using Microsoft.IdentityModel.Tokens;
 global using Microsoft.OpenApi;
