@@ -1,0 +1,29 @@
+# FitTracker Development Guidelines
+
+Auto-generated from all feature plans. Last updated: 2026-02-18
+
+## Active Technologies
+
+- TypeScript (PWA); C# / .NET 10 (API if extending) + Next.js 14 (App Router), React 18, Tailwind CSS; @fittracker/types, @fittracker/api-client (synced into PWA) (001-pwa-activity-calendar)
+
+## Project Structure
+
+```text
+src/
+tests/
+```
+
+## Commands
+
+npm test && npm run lint
+
+## Code Style
+
+TypeScript (PWA); C# / .NET 10 (API if extending): Follow standard conventions
+
+## Recent Changes
+
+- 001-pwa-activity-calendar: Added TypeScript (PWA); C# / .NET 10 (API if extending) + Next.js 14 (App Router), React 18, Tailwind CSS; @fittracker/types, @fittracker/api-client (synced into PWA)
+
+<!-- MANUAL ADDITIONS START -->
+<!-- MANUAL ADDITIONS END -->

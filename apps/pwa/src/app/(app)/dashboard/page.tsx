@@ -1,9 +1,11 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useMemo } from "react";
 import { useAuth } from "@/lib/auth-context";
 import { workoutsApi, completedWorkoutsApi, waterApi } from "../../../lib/api-client";
-import type { Workout, WorkoutStats, DailyWaterSummary } from "../../../lib/types";
+import type { Workout, WorkoutStats, DailyWaterSummary, CompletedWorkoutRecord } from "../../../lib/types";
+import { getTodayWeekdayKey, getTodayISODate } from "@/lib/calendar-utils";
+import { ActivityCalendar } from "@/components/ActivityCalendar";
 import { Card, CardContent, Button } from "@/components/ui";
 import Link from "next/link";
 import {
@@ -22,15 +24,24 @@ import {
 
 export default function DashboardPage() {
   const { user } = useAuth();
-  const [todayWorkouts, setTodayWorkouts] = useState<Workout[]>([]);
   const [stats, setStats] = useState<WorkoutStats | null>(null);
   const [waterSummary, setWaterSummary] = useState<DailyWaterSummary | null>(null);
   const [loading, setLoading] = useState(true);
   const [completedToday, setCompletedToday] = useState<Set<string>>(new Set());
   const [waterAdding, setWaterAdding] = useState(false);
   const [waterError, setWaterError] = useState<string | null>(null);
+  const [allWorkouts, setAllWorkouts] = useState<Workout[]>([]);
+  const [completedWorkouts, setCompletedWorkouts] = useState<CompletedWorkoutRecord[]>([]);
+  const [calendarError, setCalendarError] = useState<string | null>(null);
+  const [calendarLoading, setCalendarLoading] = useState(true);
 
   const todayDateUtc = () => new Date().toISOString().slice(0, 10);
+
+  // Treinos de hoje: derivados por dia da semana (data local) a partir da lista completa
+  const todayWorkouts = useMemo(() => {
+    const key = getTodayWeekdayKey();
+    return allWorkouts.filter((w) => w.days?.includes(key));
+  }, [allWorkouts]);
 
   const loadWater = async () => {
     if (!user?.profileId) return;
@@ -44,6 +55,39 @@ export default function DashboardPage() {
     }
   };
 
+  // Carregar dados do calendário de forma independente para não falhar com o resto do dashboard
+  useEffect(() => {
+    if (!user?.profileId) {
+      setCalendarLoading(false);
+      return;
+    }
+    let cancelled = false;
+    const loadCalendarData = async () => {
+      setCalendarLoading(true);
+      setCalendarError(null);
+      try {
+        const [allWorkoutsData, completedData] = await Promise.all([
+          workoutsApi.getAll(user!.profileId!),
+          completedWorkoutsApi.getAll(user!.profileId!),
+        ]);
+        if (!cancelled) {
+          setAllWorkouts(allWorkoutsData);
+          setCompletedWorkouts(completedData);
+          setCalendarError(null);
+        }
+      } catch (error) {
+        console.error("Error loading calendar data:", error);
+        if (!cancelled) {
+          setCalendarError("Não foi possível carregar o calendário. Tente novamente.");
+        }
+      } finally {
+        if (!cancelled) setCalendarLoading(false);
+      }
+    };
+    loadCalendarData();
+    return () => { cancelled = true; };
+  }, [user?.profileId]);
+
   useEffect(() => {
     const loadData = async () => {
       if (!user?.profileId) {
@@ -52,16 +96,15 @@ export default function DashboardPage() {
       }
 
       try {
-        const [workoutsData, statsData, completedData] = await Promise.all([
-          workoutsApi.getToday(user.profileId),
+        const [statsData, completedData] = await Promise.all([
           completedWorkoutsApi.getStats(user.profileId),
           completedWorkoutsApi.getAll(user.profileId),
         ]);
 
-        setTodayWorkouts(workoutsData);
         setStats(statsData);
+        setCompletedWorkouts(completedData);
 
-        const today = new Date().toISOString().split("T")[0];
+        const today = getTodayISODate();
         const completedTodayIds = new Set(
           completedData
             .filter((c) => c.completedAt.startsWith(today))
@@ -236,6 +279,30 @@ export default function DashboardPage() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Calendário de Treinos */}
+      <ActivityCalendar
+        workouts={allWorkouts}
+        completedRecords={completedWorkouts}
+        loading={calendarLoading}
+        error={calendarError}
+        onRetry={() => {
+          setCalendarLoading(true);
+          setCalendarError(null);
+          if (!user?.profileId) return;
+          Promise.all([
+            completedWorkoutsApi.getAll(user.profileId),
+            workoutsApi.getAll(user.profileId),
+          ])
+            .then(([completed, workouts]) => {
+              setCompletedWorkouts(completed);
+              setAllWorkouts(workouts);
+              setCalendarError(null);
+            })
+            .catch(() => setCalendarError("Não foi possível carregar o calendário. Tente novamente."))
+            .finally(() => setCalendarLoading(false));
+        }}
+      />
 
       {/* Today's Workouts */}
       <div className="animate-slide-up" style={{ animationDelay: "0.4s" }}>

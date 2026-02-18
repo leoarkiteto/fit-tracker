@@ -13,8 +13,15 @@ This is a **fitness activity hub** monorepo: workout tracking, bioimpedance, wat
 | Target | Command |
 |--------|---------|
 | API | `npm run api` or `cd apps/api/FitTracker.Api && dotnet run --urls="http://0.0.0.0:5000"` |
+| API build | `npm run api:build` |
 | PWA | `npm run pwa` or `cd apps/pwa && npm run dev` |
+| PWA build | `npm run pwa:build` |
+| PWA sync libs | `npm run pwa:sync-libs` — run when `libs/types` or `libs/api-client` change |
 | Mobile | `npm run mobile` or `cd apps/mobile && npx expo start` |
+| Mobile iOS | `npm run mobile:ios` |
+| Mobile Android | `npm run mobile:android` |
+
+PWA: após alterar libs, rode `npm run pwa:sync-libs`.
 
 ## Conventions
 

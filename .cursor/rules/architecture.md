@@ -20,4 +20,4 @@ libs/
 
 ## Sync (PWA)
 
-PWA installs independently. To sync libs: `npm run pwa:sync-libs` (copies types + api-client into `apps/pwa/src/lib/`).
+PWA installs independently. From monorepo root: `npm run pwa:sync-libs` (copies types + api-client into `apps/pwa/src/lib/`).

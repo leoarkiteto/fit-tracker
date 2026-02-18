@@ -13,6 +13,10 @@ npm run dev
 # or from root: npm run pwa
 ```
 
+## Setup
+
+When `libs/types` or `libs/api-client` change, run `npm run pwa:sync-libs` from root. See [architecture.md](../../.cursor/rules/architecture.md).
+
 ## Conventions
 
 - [.cursor/rules/nextjs.md](../../.cursor/rules/nextjs.md) — App Router, auth, API client
