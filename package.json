@@ -2,23 +2,12 @@
   "name": "fittracker",
   "version": "1.0.0",
   "private": true,
-  "description": "FitTracker Monorepo - Mobile App, PWA, and API",
-  "workspaces": [
-    "libs/*"
-  ],
+  "description": "FitTracker - React Native app and ASP.NET Core API",
   "scripts": {
-    "mobile": "cd apps/mobile && npm run start --workspace=apps/mobile",
-    "mobile:ios": "cd apps/mobile && npm run ios",
-    "mobile:android": "cd apps/mobile && npm run android --workspace=apps/mobile",
-    "pwa": "cd apps/pwa && npm run dev",
-    "pwa:build": "cd apps/pwa && npm run build",
-    "pwa:install": "cd apps/pwa && npm install",
-    "pwa:sync-libs": "cp libs/types/src/index.ts apps/pwa/src/lib/types/ && cp libs/api-client/src/*.ts apps/pwa/src/lib/api-client/ && sed -i '' 's|@fittracker/types|../types|g' apps/pwa/src/lib/api-client/index.ts",
-    "api": "cd apps/api/FitTracker.Api && dotnet run --urls=\"http://0.0.0.0:5000\"",
-    "api:build": "cd apps/api/FitTracker.Api && dotnet build"
-  },
-  "devDependencies": {
-    "nx": "^19.0.0",
-    "typescript": "^5.3.0"
+    "frontend": "cd frontend && npm run start",
+    "frontend:ios": "cd frontend && npm run ios",
+    "frontend:android": "cd frontend && npm run android",
+    "backend": "cd backend && dotnet run --urls=\"http://0.0.0.0:5000\"",
+    "backend:build": "cd backend && dotnet build"
   }
 }

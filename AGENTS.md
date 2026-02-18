@@ -1,23 +1,22 @@
 # FitTracker
 
-This is a **fitness activity hub** monorepo: workout tracking, bioimpedance, water intake, and AI-powered planning.
+Fitness activity hub: workout tracking, bioimpedance, water intake, and AI-powered planning.
 
-## Monorepo
+## Structure
 
-- **Nx** workspace (`apps/`, `libs/`)
-- **npm** workspaces for JS/TS; **dotnet** for API
-- Each app has its own `AGENTS.md` — see `apps/<app>/AGENTS.md`
+- **frontend/** — React Native (Expo); see [frontend/AGENTS.md](frontend/AGENTS.md)
+- **backend/** — ASP.NET Core API; see [backend/AGENTS.md](backend/AGENTS.md)
 
 ## Commands
 
-| Target | Command |
-|--------|---------|
-| API | `npm run api` or `cd apps/api/FitTracker.Api && dotnet run --urls="http://0.0.0.0:5000"` |
-| PWA | `npm run pwa` or `cd apps/pwa && npm run dev` |
-| Mobile | `npm run mobile` or `cd apps/mobile && npx expo start` |
+| Target   | Command |
+|----------|---------|
+| Backend  | `npm run backend` or `cd backend && dotnet run --urls="http://0.0.0.0:5000"` |
+| Frontend | `npm run frontend` or `cd frontend && npx expo start` |
 
 ## Conventions
 
-- [.cursor/rules/architecture.md](.cursor/rules/architecture.md) — Monorepo structure and shared libs
-- [.cursor/rules/typescript.md](.cursor/rules/typescript.md) — TypeScript (PWA, mobile)
+- [.cursor/rules/architecture.md](.cursor/rules/architecture.md) — Project structure
+- [.cursor/rules/typescript.md](.cursor/rules/typescript.md) — TypeScript (frontend)
+- [.cursor/rules/react-native.md](.cursor/rules/react-native.md) — Expo, navigation, API
 - [.cursor/rules/api-conventions.md](.cursor/rules/api-conventions.md) — API design patterns

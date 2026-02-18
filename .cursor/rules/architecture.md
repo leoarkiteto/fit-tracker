@@ -1,23 +1,18 @@
 # FitTracker Architecture
 
-## Monorepo Layout
+## Layout
 
 ```
-apps/
-├── api/          → ASP.NET Core (FitTracker.Api)
-├── pwa/          → Next.js + Tailwind PWA
-└── mobile/       → React Native (Expo)
-
-libs/
-├── types/        → @fittracker/types — shared TS interfaces
-└── api-client/   → @fittracker/api-client — platform-agnostic API layer
+frontend/     → React Native (Expo); types and API client in src/types, src/services
+backend/      → ASP.NET Core (FitTracker.Api); Vertical Slice in Features/
 ```
 
-## Shared Libraries
+## Backend
 
-- **@fittracker/types**: Workout, Exercise, UserProfile, WaterIntake, etc.
-- **@fittracker/api-client**: REST client used by PWA and mobile. Config in `libs/api-client/src/config.ts`.
+- **Vertical Slice**: each feature under `Features/` (Auth, Profiles, Workouts, Bioimpedance, WaterIntake, AI).
+- Shared data and infra in `Shared/`.
 
-## Sync (PWA)
+## Frontend
 
-PWA installs independently. To sync libs: `npm run pwa:sync-libs` (copies types + api-client into `apps/pwa/src/lib/`).
+- Types and API layer live inside the app: `frontend/src/types/`, `frontend/src/services/`.
+- No shared libs; the frontend is a single standalone project.

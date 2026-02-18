@@ -3,12 +3,6 @@
 # Dependencies
 node_modules/
 
-# Nx
-.nx/
-dist/
-.angular/
-tmp/
-
 # Expo / React Native
 .expo/
 web-build/
@@ -16,11 +10,6 @@ expo-env.d.ts
 
 # Metro
 .metro-health-check*
-
-# Next.js (PWA)
-.next/
-out/
-.vercel
 
 # .NET / API
 [Bb]in/
@@ -48,9 +37,9 @@ packages/
 *.key
 *.mobileprovision
 
-# Generated native folders
-/ios
-/android
+# Generated native folders (in frontend)
+frontend/ios
+frontend/android
 
 # Debug
 npm-debug.*
