@@ -142,10 +142,10 @@ export const AppProvider: React.FC<{ children: ReactNode }> = ({
           completedWorkoutsApi.getStats(id),
         ]);
 
-      setWorkouts(loadedWorkouts);
-      setBioimpedanceHistory(loadedBioimpedance);
-      setCompletedWorkouts(loadedCompleted);
-      setStats(loadedStats);
+      setWorkouts(loadedWorkouts ?? []);
+      setBioimpedanceHistory(loadedBioimpedance ?? []);
+      setCompletedWorkouts(loadedCompleted ?? []);
+      setStats(loadedStats ?? { totalWorkoutsCompleted: 0, workoutsThisWeek: 0, totalMinutesSpent: 0 });
     } catch (err) {
       console.error("Error loading profile data:", err);
       throw err;

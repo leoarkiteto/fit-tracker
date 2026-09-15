@@ -361,7 +361,7 @@ export const WorkoutDetailScreen: React.FC = () => {
 
             return (
               <TouchableOpacity
-                key={exercise.id}
+                key={exercise.id || `exercise-${index}`}
                 style={[
                   styles.exerciseCard,
                   isCompleted && styles.exerciseCardCompleted,

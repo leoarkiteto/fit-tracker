@@ -13,6 +13,7 @@ import {
   WaterIntakeEntry,
   DailyWaterSummary,
 } from "../types";
+import { generateId } from "../utils/generateId";
 
 // Helper para verificar se um ID é um GUID válido
 const isValidGuid = (id: string): boolean => {
@@ -181,7 +182,7 @@ const convertApiProfile = (api: ApiUserProfile): UserProfile & { id: string } =>
 });
 
 const convertApiExercise = (api: ApiExercise): Exercise => ({
-  id: api.id,
+  id: api.id || generateId(),
   name: api.name,
   muscleGroup: api.muscleGroup as MuscleGroup,
   sets: api.sets,
@@ -197,7 +198,7 @@ const convertApiWorkout = (api: ApiWorkout): Workout => ({
   description: api.description ?? undefined,
   goal: api.goal as WorkoutGoal,
   days: api.days as DayOfWeek[],
-  exercises: api.exercises.map(convertApiExercise),
+  exercises: (api.exercises ?? []).map(convertApiExercise),
   createdAt: api.createdAt,
   updatedAt: api.updatedAt,
   isCompleted: api.isCompleted,
@@ -217,7 +218,7 @@ const convertApiDailyWaterSummary = (
   date: api.date,
   totalMl: api.totalMl,
   goalMl: api.goalMl,
-  entries: api.entries.map(convertApiWaterEntry),
+  entries: (api.entries ?? []).map(convertApiWaterEntry),
 });
 
 const convertApiBioimpedance = (api: ApiBioimpedance): BioimpedanceData => ({
@@ -239,7 +240,7 @@ const convertApiBioimpedance = (api: ApiBioimpedance): BioimpedanceData => ({
 export const profileApi = {
   getAll: async (): Promise<(UserProfile & { id: string })[]> => {
     const data = await fetchApi<ApiUserProfile[]>(API_ENDPOINTS.profiles);
-    return data.map(convertApiProfile);
+    return (data ?? []).map(convertApiProfile);
   },
 
   getById: async (id: string): Promise<UserProfile & { id: string }> => {
@@ -296,7 +297,7 @@ export const workoutsApi = {
     const data = await fetchApi<ApiWorkout[]>(
       API_ENDPOINTS.workouts(profileId)
     );
-    return data.map(convertApiWorkout);
+    return (data ?? []).map(convertApiWorkout);
   },
 
   getById: async (profileId: string, id: string): Promise<Workout> => {
@@ -310,7 +311,7 @@ export const workoutsApi = {
     const data = await fetchApi<ApiWorkout[]>(
       API_ENDPOINTS.todayWorkouts(profileId)
     );
-    return data.map(convertApiWorkout);
+    return (data ?? []).map(convertApiWorkout);
   },
 
   create: async (
@@ -380,10 +381,15 @@ export const waterApi = {
     profileId: string,
     date: string
   ): Promise<DailyWaterSummary> => {
-    const data = await fetchApi<ApiDailyWaterSummary>(
+    const data = await fetchApi<ApiDailyWaterSummary | null>(
       API_ENDPOINTS.waterByDate(profileId, date)
     );
-    return convertApiDailyWaterSummary(data);
+    return data ? convertApiDailyWaterSummary(data) : {
+      date,
+      totalMl: 0,
+      goalMl: 2000,
+      entries: [],
+    };
   },
 
   add: async (
@@ -422,7 +428,7 @@ export const bioimpedanceApi = {
     const data = await fetchApi<ApiBioimpedance[]>(
       API_ENDPOINTS.bioimpedance(profileId)
     );
-    return data.map(convertApiBioimpedance);
+    return (data ?? []).map(convertApiBioimpedance);
   },
 
   getById: async (profileId: string, id: string): Promise<BioimpedanceData> => {
@@ -513,7 +519,7 @@ export const completedWorkoutsApi = {
     const data = await fetchApi<ApiCompletedWorkout[]>(
       API_ENDPOINTS.completedWorkouts(profileId)
     );
-    return data.map((c) => ({
+    return (data ?? []).map((c) => ({
       workoutId: c.workoutId,
       completedAt: c.completedAt,
       durationSeconds: c.durationSeconds,
@@ -521,9 +527,10 @@ export const completedWorkoutsApi = {
   },
 
   getStats: async (profileId: string): Promise<ApiWorkoutStats> => {
-    return fetchApi<ApiWorkoutStats>(
+    const data = await fetchApi<ApiWorkoutStats | null>(
       API_ENDPOINTS.completedWorkoutStats(profileId)
     );
+    return data ?? { totalWorkoutsCompleted: 0, workoutsThisWeek: 0, totalMinutesSpent: 0 };
   },
 
   complete: async (
