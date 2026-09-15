@@ -1,132 +1,84 @@
 package main
 
 import (
-	"fittracker-api/internal/ai"
-	"fittracker-api/internal/database"
-	"fittracker-api/internal/handlers"
 	"log"
 	"net/http"
+	"os"
+
+	aihandler "fittracker-api/internal/aiplanning/handler"
+	aiinfra "fittracker-api/internal/aiplanning/infrastructure"
+	aiservice "fittracker-api/internal/aiplanning/service"
+	biohandler "fittracker-api/internal/bioimpedance/handler"
+	bioinfra "fittracker-api/internal/bioimpedance/infrastructure"
+	bioservice "fittracker-api/internal/bioimpedance/service"
+	completedhandler "fittracker-api/internal/completedworkout/handler"
+	completedinfra "fittracker-api/internal/completedworkout/infrastructure"
+	completedservice "fittracker-api/internal/completedworkout/service"
+	profilehandler "fittracker-api/internal/profile/handler"
+	profileinfra "fittracker-api/internal/profile/infrastructure"
+	profileservice "fittracker-api/internal/profile/service"
+	userhandler "fittracker-api/internal/user/handler"
+	userinfra "fittracker-api/internal/user/infrastructure"
+	userservice "fittracker-api/internal/user/service"
+	waterhandler "fittracker-api/internal/water/handler"
+	waterinfra "fittracker-api/internal/water/infrastructure"
+	waterservice "fittracker-api/internal/water/service"
+	workouthandler "fittracker-api/internal/workout/handler"
+	workoutinfra "fittracker-api/internal/workout/infrastructure"
+	workoutservice "fittracker-api/internal/workout/service"
+	"fittracker-api/pkg/auth"
+	"fittracker-api/pkg/database"
+	"fittracker-api/pkg/httpx"
 )
 
 func main() {
-	// 1. Initialize Database
+	// 1. Infrastructure: the database and the token signer (JWT_SECRET is
+	// required for the server to start).
 	db := database.InitDB("fittracker.db")
 	defer db.Close()
 
-	// 2. Initialize Clients & Handlers
-	aiClient, err := ai.NewLangChainClient("http://localhost:11434", "llama3.2")
+	signer, err := auth.NewSigner(os.Getenv("JWT_SECRET"))
+	if err != nil {
+		log.Fatalf("Failed to initialize auth: %v", err)
+	}
+
+	// 2. Outbound adapters.
+	ollamaClient, err := aiinfra.NewOllamaClient("http://localhost:11434", "llama3.2")
 	if err != nil {
 		log.Fatalf("Failed to initialize AI Client: %v", err)
 	}
 
-	authH := &handlers.AuthHandler{DB: db}
-	profileH := &handlers.ProfileHandler{DB: db}
-	workoutH := &handlers.WorkoutHandler{DB: db}
-	completedH := &handlers.CompletedWorkoutHandler{DB: db}
-	bioH := &handlers.BioimpedanceHandler{DB: db}
-	waterH := &handlers.WaterHandler{DB: db}
-	aiH := &handlers.AIHandler{DB: db, AIClient: aiClient}
-
-	// 3. Setup Router (Go 1.22+ syntax)
+	// 3. Router: every slice registers its own routes.
 	mux := http.NewServeMux()
 
-	// Auth routes
-	mux.HandleFunc("POST /api/auth/register", handlers.LimitRequestBody(authH.Register))
-	mux.HandleFunc("POST /api/auth/login", handlers.LimitRequestBody(authH.Login))
-	mux.HandleFunc("GET /api/auth/me", handlers.AuthMiddleware(authH.Me))
-	mux.HandleFunc(
-		"PATCH /api/auth/change-password",
-		handlers.LimitRequestBody(handlers.AuthMiddleware(authH.ChangePassword)),
+	// User slice
+	userhandler.Router(mux, signer, userservice.New(userinfra.NewUserRepository(db), signer))
+
+	// Profile slice
+	profilehandler.Router(mux, signer, profileservice.New(profileinfra.NewProfileRepository(db)))
+
+	// Workout slice
+	workouthandler.Router(mux, signer, workoutservice.New(workoutinfra.NewWorkoutRepository(db)))
+
+	// Completed workout slice
+	completedhandler.Router(
+		mux,
+		signer,
+		completedservice.New(completedinfra.NewCompletedWorkoutRepository(db)),
 	)
 
-	// Profile routes
-	mux.HandleFunc("GET /api/profiles", handlers.AuthMiddleware(profileH.GetAll))
-	mux.HandleFunc("GET /api/profiles/{id}", handlers.AuthMiddleware(profileH.GetByID))
-	mux.HandleFunc(
-		"PUT /api/profiles/{id}",
-		handlers.LimitRequestBody(handlers.AuthMiddleware(profileH.Update)),
-	)
-	mux.HandleFunc("DELETE /api/profiles/{id}", handlers.AuthMiddleware(profileH.Delete))
+	// Bioimpedance slice
+	biohandler.Router(mux, signer, bioservice.New(bioinfra.NewMeasurementRepository(db)))
 
-	// Workout routes
-	mux.HandleFunc(
-		"GET /api/profiles/{profileId}/workouts",
-		handlers.AuthMiddleware(workoutH.GetAll),
-	)
-	mux.HandleFunc(
-		"GET /api/profiles/{profileId}/workouts/today",
-		handlers.AuthMiddleware(workoutH.GetToday),
-	)
-	mux.HandleFunc(
-		"POST /api/profiles/{profileId}/workouts",
-		handlers.LimitRequestBody(handlers.AuthMiddleware(workoutH.Create)),
-	)
-	mux.HandleFunc(
-		"GET /api/profiles/{profileId}/workouts/{id}",
-		handlers.AuthMiddleware(workoutH.GetByID),
-	)
-	mux.HandleFunc(
-		"PUT /api/profiles/{profileId}/workouts/{id}",
-		handlers.LimitRequestBody(handlers.AuthMiddleware(workoutH.Update)),
-	)
-	mux.HandleFunc(
-		"DELETE /api/profiles/{profileId}/workouts/{id}",
-		handlers.AuthMiddleware(workoutH.Delete),
-	)
+	// Water intake slice
+	waterhandler.Router(mux, signer, waterservice.New(waterinfra.NewEntryRepository(db)))
 
-	// Completed Workout routes
-	mux.HandleFunc(
-		"GET /api/profiles/{profileId}/completed-workouts",
-		handlers.AuthMiddleware(completedH.GetAll),
-	)
-	mux.HandleFunc(
-		"POST /api/profiles/{profileId}/completed-workouts",
-		handlers.LimitRequestBody(handlers.AuthMiddleware(completedH.Complete)),
-	)
-	mux.HandleFunc(
-		"GET /api/profiles/{profileId}/completed-workouts/stats",
-		handlers.AuthMiddleware(completedH.GetStats),
-	)
-
-	// Bioimpedance routes
-	mux.HandleFunc(
-		"GET /api/profiles/{profileId}/bioimpedance",
-		handlers.AuthMiddleware(bioH.GetAll),
-	)
-	mux.HandleFunc(
-		"POST /api/profiles/{profileId}/bioimpedance",
-		handlers.LimitRequestBody(handlers.AuthMiddleware(bioH.Create)),
-	)
-	mux.HandleFunc(
-		"GET /api/profiles/{profileId}/bioimpedance/latest",
-		handlers.AuthMiddleware(bioH.GetLatest),
-	)
-	mux.HandleFunc(
-		"DELETE /api/profiles/{profileId}/bioimpedance/{id}",
-		handlers.AuthMiddleware(bioH.Delete),
-	)
-
-	// Water Intake routes
-	mux.HandleFunc("GET /api/profiles/{profileId}/water", handlers.AuthMiddleware(waterH.GetDaily))
-	mux.HandleFunc(
-		"POST /api/profiles/{profileId}/water",
-		handlers.LimitRequestBody(handlers.AuthMiddleware(waterH.Create)),
-	)
-	mux.HandleFunc(
-		"DELETE /api/profiles/{profileId}/water/{id}",
-		handlers.AuthMiddleware(waterH.Delete),
-	)
-
-	// AI Planning routes
-	mux.HandleFunc(
-		"POST /api/ai/planning/generate",
-		handlers.LimitRequestBody(handlers.AuthMiddleware(aiH.Generate)),
-	)
-	mux.HandleFunc(
-		"POST /api/ai/planning/accept",
-		handlers.LimitRequestBody(handlers.AuthMiddleware(aiH.Accept)),
-	)
-	mux.HandleFunc("GET /api/ai/planning/status", aiH.Status)
+	// AI planning slice
+	aihandler.Router(mux, signer, aiservice.New(
+		aiinfra.NewProfileReader(db),
+		aiinfra.NewWorkoutWriter(db),
+		ollamaClient,
+	))
 
 	// Health check
 	mux.HandleFunc("GET /health", func(w http.ResponseWriter, r *http.Request) {
@@ -134,27 +86,9 @@ func main() {
 		w.Write([]byte("OK"))
 	})
 
-	// 4. Wrap with CORS Middleware
-	handler := corsMiddleware(mux)
-
-	// 5. Start Server
+	// 4. Start server
 	log.Println("Go Server starting on :5000...")
-	if err := http.ListenAndServe(":5000", handler); err != nil {
+	if err := http.ListenAndServe(":5000", httpx.CORS(mux)); err != nil {
 		log.Fatal(err)
 	}
-}
-
-func corsMiddleware(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		w.Header().Set("Access-Control-Allow-Origin", "*")
-		w.Header().Set("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS")
-		w.Header().Set("Access-Control-Allow-Headers", "Content-Type, Authorization")
-
-		if r.Method == "OPTIONS" {
-			w.WriteHeader(http.StatusOK)
-			return
-		}
-
-		next.ServeHTTP(w, r)
-	})
 }
