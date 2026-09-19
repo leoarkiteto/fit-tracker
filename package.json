@@ -2,7 +2,7 @@
   "name": "fittracker",
   "version": "1.0.0",
   "private": true,
-  "description": "FitTracker - React Native app and ASP.NET Core API",
+  "description": "FitTracker - React Native app and Go",
   "scripts": {
     "frontend": "cd frontend && npm run start",
     "frontend:ios": "cd frontend && npm run ios",
