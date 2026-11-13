@@ -1,0 +1,9 @@
+{
+  "schemaVersion": 1,
+  "validation": {
+    "commands": {
+      "lint": "go -C backend vet ./...",
+      "test": "go -C backend test ./..."
+    }
+  }
+}

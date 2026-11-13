@@ -87,3 +87,7 @@ coverage/
 *.bak
 *.tmp
 .cache/
+
+# factory:begin v1
+.factory/workflows/
+# factory:end

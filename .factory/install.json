@@ -1,0 +1,36 @@
+{
+  "schemaVersion": 1,
+  "kitVersion": "0.2.1-beta",
+  "installedAt": "2026-11-13T01:51:45.293Z",
+  "updatedAt": "2026-11-13T01:51:45.293Z",
+  "entries": [
+    {
+      "path": ".factory/config.json",
+      "component": "config",
+      "ownership": "file",
+      "sha256": "88d314e7b57fbec343b86b7e48683f6c13266c365e6cd044e0b602aa9d7f05d2"
+    },
+    {
+      "path": ".gitignore",
+      "component": "gitignore-block",
+      "ownership": "block",
+      "sha256": "8004f3389ad5ef451b2a1b2ecbceefe074670735d684e82deb62fafe7981ce19"
+    },
+    {
+      "path": ".claude/settings.local.json",
+      "component": "settings-permissions",
+      "ownership": "entries",
+      "sha256": "e14ec92e2f3d4f99e0d092fd9172d30d8969dec5d2128311441816a2ef2b776a",
+      "addedEntries": [
+        "allow:Bash(factory-state *)",
+        "allow:Edit(/.factory/**)"
+      ]
+    },
+    {
+      "path": ".claude/rules/factory-workflow.md",
+      "component": "rules",
+      "ownership": "file",
+      "sha256": "f4621eb9488dbbeaf00f3facd0c17ca2b7194ebc1754bce8ba2ddba64ab6317d"
+    }
+  ]
+}
