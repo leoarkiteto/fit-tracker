@@ -5,6 +5,27 @@ import (
 	"time"
 )
 
+// PasswordResetRepository is the outbound port for password reset codes. An
+// account has at most one code.
+type PasswordResetRepository interface {
+	// Replace stores code as the account's only reset code, overwriting any previous one.
+	Replace(ctx context.Context, code PasswordResetCode) error
+	// Get loads the account's reset code.
+	Get(ctx context.Context, userID string) (*PasswordResetCode, bool, error)
+	// ConsumeAttempt atomically counts one attempt against the account's code
+	// identified by codeHash, if it is unused and has fewer than max attempts.
+	// granted reports whether the attempt was counted.
+	ConsumeAttempt(ctx context.Context, userID, codeHash string, max int) (granted bool, err error)
+	// MarkUsed stamps the code identified by codeHash as used if it is still
+	// unused; won reports whether this call did it.
+	MarkUsed(ctx context.Context, userID, codeHash string, at time.Time) (won bool, err error)
+}
+
+// Mailer is the outbound port that delivers reset codes to the account email.
+type Mailer interface {
+	SendPasswordResetCode(ctx context.Context, email, code string) error
+}
+
 // Repository is the outbound port for account persistence. Implementations live
 // in the slice's infrastructure package.
 //

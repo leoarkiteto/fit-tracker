@@ -64,6 +64,15 @@ func createSchema(db *sql.DB) {
 		FOREIGN KEY (user_profile_id) REFERENCES UserProfiles(id)
 	);
 
+	CREATE TABLE IF NOT EXISTS PasswordResetCodes (
+		user_id TEXT PRIMARY KEY,
+		code_hash TEXT NOT NULL,
+		created_at DATETIME NOT NULL,
+		attempts INTEGER NOT NULL DEFAULT 0,
+		used_at DATETIME,
+		FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+	);
+
 	CREATE TABLE IF NOT EXISTS Workouts (
 		id TEXT PRIMARY KEY,
 		name TEXT NOT NULL,

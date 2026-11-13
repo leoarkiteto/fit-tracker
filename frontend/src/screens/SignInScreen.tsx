@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   View,
   Text,
@@ -13,17 +13,13 @@ import {
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
 import { Ionicons } from "@expo/vector-icons";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute, RouteProp } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
 import { Input, Button } from "../components";
 import { colors, spacing, borderRadius, typography } from "../theme";
 import { useAuth } from "../context/AuthContext";
-
-type AuthStackParamList = {
-  SignIn: undefined;
-  SignUp: undefined;
-};
+import { AuthStackParamList } from "../navigation/types";
 
 type SignInScreenNavigationProp = NativeStackNavigationProp<
   AuthStackParamList,
@@ -32,9 +28,16 @@ type SignInScreenNavigationProp = NativeStackNavigationProp<
 
 export const SignInScreen: React.FC = () => {
   const navigation = useNavigation<SignInScreenNavigationProp>();
+  const route = useRoute<RouteProp<AuthStackParamList, "SignIn">>();
   const { signIn } = useAuth();
 
-  const [email, setEmail] = useState("");
+  const [email, setEmail] = useState(route.params?.email ?? "");
+
+  useEffect(() => {
+    if (route.params?.email) {
+      setEmail(route.params.email);
+    }
+  }, [route.params?.email]);
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -132,6 +135,14 @@ export const SignInScreen: React.FC = () => {
               onRightIconPress={() => setShowPassword(!showPassword)}
             />
 
+            <TouchableOpacity
+              style={styles.forgotLink}
+              onPress={() => navigation.navigate("ForgotPassword")}
+              accessibilityRole="link"
+            >
+              <Text style={styles.footerLink}>Esqueci minha senha</Text>
+            </TouchableOpacity>
+
             <Button
               title={isLoading ? "" : "Entrar"}
               onPress={handleSignIn}
@@ -199,6 +210,9 @@ const styles = StyleSheet.create({
   form: {
     gap: spacing.md,
     marginBottom: spacing.xl,
+  },
+  forgotLink: {
+    alignSelf: "flex-end",
   },
   footer: {
     flexDirection: "row",

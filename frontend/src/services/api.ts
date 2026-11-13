@@ -630,6 +630,32 @@ export const authApi = {
     };
   },
 
+  forgotPassword: async (email: string): Promise<void> => {
+    await fetchApi<unknown>(
+      "/api/auth/forgot-password",
+      {
+        method: "POST",
+        body: JSON.stringify({ email }),
+      },
+      false
+    );
+  },
+
+  resetPassword: async (
+    email: string,
+    code: string,
+    newPassword: string
+  ): Promise<void> => {
+    await fetchApi<void>(
+      "/api/auth/reset-password",
+      {
+        method: "POST",
+        body: JSON.stringify({ email, code, newPassword }),
+      },
+      false
+    );
+  },
+
   refreshToken: async (): Promise<AuthResult> => {
     const data = await fetchApi<ApiAuthResponse>("/api/auth/refresh", {
       method: "POST",

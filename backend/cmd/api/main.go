@@ -37,10 +37,14 @@ func main() {
 	db := database.InitDB("fittracker.db")
 	defer db.Close()
 
-	signer, err := auth.NewSigner(os.Getenv("JWT_SECRET"))
+	secret := os.Getenv("JWT_SECRET")
+	signer, err := auth.NewSigner(secret)
 	if err != nil {
 		log.Fatalf("Failed to initialize auth: %v", err)
 	}
+	resetKey := auth.DeriveKey(secret, "password-reset")
+
+	log.Println("WARNING: development mailer active — password reset codes are written to the server log. Do not deploy as-is.")
 
 	// 2. Outbound adapters.
 	ollamaClient, err := aiinfra.NewOllamaClient("http://localhost:11434", "llama3.2")
@@ -52,7 +56,13 @@ func main() {
 	mux := http.NewServeMux()
 
 	// User slice
-	userhandler.Router(mux, signer, userservice.New(userinfra.NewUserRepository(db), signer))
+	userhandler.Router(mux, signer, userservice.New(
+		userinfra.NewUserRepository(db),
+		userinfra.NewPasswordResetRepository(db),
+		userinfra.NewLogMailer(),
+		signer,
+		resetKey,
+	))
 
 	// Profile slice
 	profilehandler.Router(mux, signer, profileservice.New(profileinfra.NewProfileRepository(db)))

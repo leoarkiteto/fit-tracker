@@ -13,6 +13,8 @@ import (
 func Router(mux *http.ServeMux, signer *auth.Signer, svc *service.Service) {
 	mux.HandleFunc("POST /api/auth/register", httpx.LimitBody(Register(svc)))
 	mux.HandleFunc("POST /api/auth/login", httpx.LimitBody(Login(svc)))
+	mux.HandleFunc("POST /api/auth/forgot-password", httpx.LimitBody(ForgotPassword(svc)))
+	mux.HandleFunc("POST /api/auth/reset-password", httpx.LimitBody(ResetPassword(svc)))
 	mux.HandleFunc("GET /api/auth/me", httpx.RequireAuth(signer, Me(svc)))
 	mux.HandleFunc(
 		"PATCH /api/auth/change-password",

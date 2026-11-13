@@ -3,17 +3,32 @@
 package service
 
 import (
+	"time"
+
 	"fittracker-api/internal/user"
 	"fittracker-api/pkg/auth"
 )
 
 // Service holds the account use cases.
 type Service struct {
-	repo   user.Repository
-	signer *auth.Signer
+	repo     user.Repository
+	resets   user.PasswordResetRepository
+	mailer   user.Mailer
+	signer   *auth.Signer
+	now      func() time.Time
+	resetKey []byte
 }
 
-// New builds the account service.
-func New(repo user.Repository, signer *auth.Signer) *Service {
-	return &Service{repo: repo, signer: signer}
+// New builds the account service. resetKey is the HMAC key under which reset
+// codes are hashed before they are stored.
+func New(repo user.Repository, resets user.PasswordResetRepository, mailer user.Mailer,
+	signer *auth.Signer, resetKey []byte) *Service {
+	return &Service{
+		repo:     repo,
+		resets:   resets,
+		mailer:   mailer,
+		signer:   signer,
+		now:      time.Now,
+		resetKey: resetKey,
+	}
 }

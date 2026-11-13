@@ -3,6 +3,8 @@
 package auth
 
 import (
+	"crypto/hmac"
+	"crypto/sha256"
 	"errors"
 	"time"
 
@@ -75,6 +77,13 @@ func (s *Signer) ValidateToken(tokenString string) (*jwt.MapClaims, error) {
 	}
 
 	return nil, errors.New("invalid token")
+}
+
+// DeriveKey derives a purpose-bound subkey: HMAC-SHA256(secret, purpose).
+func DeriveKey(secret, purpose string) []byte {
+	mac := hmac.New(sha256.New, []byte(secret))
+	mac.Write([]byte(purpose))
+	return mac.Sum(nil)
 }
 
 // HashPassword hashes a plaintext password with bcrypt.

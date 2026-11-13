@@ -39,6 +39,35 @@ type AuthResponse struct {
 	Token     string    `json:"token"`
 }
 
+// Password reset policy.
+const (
+	// ResetCodeTTL is how long a reset code stays valid after being issued.
+	ResetCodeTTL = 15 * time.Minute
+	// ResetCodeMaxAttempts is the number of wrong attempts after which a code is dead.
+	ResetCodeMaxAttempts = 5
+	// ResetCodeCooldown is the minimum interval between two reset requests.
+	ResetCodeCooldown = 60 * time.Second
+	// MinPasswordLength is the shortest accepted new password.
+	MinPasswordLength = 6
+)
+
+// PasswordResetCode is the single active Código de redefinição of an account.
+type PasswordResetCode struct {
+	CreatedAt time.Time
+	UsedAt    *time.Time
+	UserID    string
+	CodeHash  string // hex HMAC-SHA256
+	Attempts  int
+}
+
+// Password reset errors.
+var (
+	// ErrInvalidResetCode covers every code or account failure, without detail.
+	ErrInvalidResetCode = apperror.BadRequest("Código inválido ou expirado")
+	// ErrPasswordTooShort is returned for a new password under MinPasswordLength.
+	ErrPasswordTooShort = apperror.BadRequest("A senha deve ter pelo menos 6 caracteres")
+)
+
 // Domain errors. The messages are part of the API contract the mobile client
 // displays, so they are defined next to the domain rather than in the handler.
 var (

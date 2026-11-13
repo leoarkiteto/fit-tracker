@@ -9,5 +9,7 @@ export { WaterScreen } from "./WaterScreen";
 export { ProfileScreen } from "./ProfileScreen";
 export { SignInScreen } from "./SignInScreen";
 export { SignUpScreen } from "./SignUpScreen";
+export { ForgotPasswordScreen } from "./ForgotPasswordScreen";
+export { ResetPasswordScreen } from "./ResetPasswordScreen";
 export { ChangePasswordScreen } from "./ChangePasswordScreen";
 export { WorkoutPlanningScreen } from "./WorkoutPlanningScreen";
