@@ -2,12 +2,15 @@
   "name": "fittracker",
   "version": "1.0.0",
   "private": true,
+  "workspaces": [
+    "frontend"
+  ],
   "description": "FitTracker - React Native app and Go",
   "scripts": {
-    "frontend": "cd frontend && npm run start",
+    "frontend": "cd frontend && npm run start --workspace=frontend",
     "frontend:ios": "cd frontend && npm run ios",
     "frontend:android": "cd frontend && npm run android",
-    "backend": "cd backend && dotnet run --urls=\"http://0.0.0.0:5000\"",
-    "backend:build": "cd backend && dotnet build"
+    "backend": "cd backend && go run ./cmd/api",
+    "backend:build": "cd backend && go build ./..."
   }
 }
