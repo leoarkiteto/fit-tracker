@@ -3,7 +3,8 @@
   "validation": {
     "commands": {
       "lint": "go -C backend vet ./...",
-      "test": "go -C backend test ./..."
+      "test": "go -C backend test ./...",
+      "typecheck": "npm exec --workspace=frontend -- tsc --noEmit"
     }
   }
 }
