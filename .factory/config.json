@@ -2,9 +2,9 @@
   "schemaVersion": 1,
   "validation": {
     "commands": {
-      "lint": "go -C backend vet ./...",
-      "test": "go -C backend test ./...",
-      "typecheck": "npm --prefix frontend run typecheck"
+      "lint": "go -C apps/api vet ./...",
+      "test": "go -C apps/api test ./...",
+      "typecheck": "pnpm --filter @fit-tracker/mobile typecheck"
     }
   },
   "specification": {

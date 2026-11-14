@@ -80,6 +80,7 @@ ehthumbs.db
 
 # Testing
 coverage/
+apps/api/coverage.out
 .nyc_output/
 *.lcov
 
