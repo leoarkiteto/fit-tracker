@@ -1,13 +1,15 @@
 {
-  "name": "@fittracker/mobile",
+  "name": "@fit-tracker/mobile",
   "version": "1.0.0",
   "private": true,
   "main": "index.js",
   "scripts": {
-    "start": "expo start",
-    "android": "expo run:android",
-    "ios": "expo run:ios",
+    "dev": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
     "web": "expo start --web",
+    "build": "expo export",
+    "lint": "eslint .",
     "typecheck": "tsc --noEmit"
   },
   "dependencies": {

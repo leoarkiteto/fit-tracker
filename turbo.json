@@ -1,0 +1,24 @@
+{
+  "$schema": "https://turborepo.dev/schema.json",
+  "tasks": {
+    "dev": {
+      "cache": false,
+      "persistent": true,
+      "env": [
+        "JWT_SECRET",
+        "GOOGLE_CLIENT_IDS",
+        "GITHUB_CLIENT_ID",
+        "GITHUB_CLIENT_SECRET"
+      ]
+    },
+    "build": {
+      "dependsOn": ["^build"],
+      "outputs": ["dist/**", "build/**", "bin/**"]
+    },
+    "lint": {},
+    "test": {
+      "cache": false
+    },
+    "typecheck": {}
+  }
+}

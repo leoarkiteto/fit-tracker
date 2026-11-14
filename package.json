@@ -1,13 +1,16 @@
 {
-  "name": "fittracker",
+  "name": "fit-tracker",
   "version": "1.0.0",
   "private": true,
   "description": "FitTracker - React Native app and Go",
   "scripts": {
-    "frontend": "cd frontend && npm run start",
-    "frontend:ios": "cd frontend && npm run ios",
-    "frontend:android": "cd frontend && npm run android",
-    "backend": "cd backend && go run ./cmd/api",
-    "backend:build": "cd backend && go build ./..."
-  }
+    "dev": "turbo dev",
+    "build": "turbo build",
+    "lint": "turbo lint",
+    "typecheck": "turbo typecheck"
+  },
+  "devDependencies": {
+    "turbo": "^2.0.0"
+  },
+  "packageManager": "pnpm@12.18.0"
 }

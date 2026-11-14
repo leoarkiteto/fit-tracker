@@ -1,0 +1,11 @@
+{
+  "name": "@fit-tracker/api",
+  "private": true,
+  "scripts": {
+    "dev": "make run",
+    "build": "make build",
+    "test": "make test",
+    "lint": "make lint",
+    "vet": "make vet"
+  }
+}
