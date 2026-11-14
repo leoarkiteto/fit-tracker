@@ -53,7 +53,7 @@ Fitness activity hub: workout tracking, bioimpedance, water intake, AI-powered p
 
 ## Watch out for
 
-- **Stale root scripts** — `npm run backend` and `npm run backend:build` in [package.json](package.json) reference `dotnet`, but the actual backend is Go. Use `cd backend && go run ./cmd/api` instead.
+- **Dependencies live only in `frontend/`** — The root `package.json` is not an npm workspace (no `workspaces` field, no root `node_modules` or lockfile); the lockfile is `frontend/package-lock.json`. Install from `frontend/` (`npm install`, `npx expo install …`). Do not add `workspaces` back: Expo then treats the root as a monorepo and Metro fails watching a root `node_modules` that does not exist (`ENOENT … fit-tracker/node_modules`). Typecheck from the root: `npm --prefix frontend run typecheck`.
 - **JWT_SECRET is required** — The backend reads `JWT_SECRET` from the environment and refuses to start without it; `backend/.env` is not loaded automatically, so export it (or use a `.env` loader) before `go run ./cmd/api`.
 - **Frontend has no tests** — `backend/` ships per-slice service tests (`cd backend && go test ./...`), but `frontend/src/` still has none and `package.json` has no test script.
 - **No lint/format config** — No ESLint, Prettier, or .editorconfig at project level (Go `make fmt`/`make vet` work via the Makefile).
