@@ -6,3 +6,4 @@ export { GoalSelector } from "./GoalSelector";
 export { ExerciseCard } from "./ExerciseCard";
 export { WorkoutCard } from "./WorkoutCard";
 export { WorkoutCalendar } from "./WorkoutCalendar";
+export { SocialLoginButtons } from "./SocialLoginButtons";

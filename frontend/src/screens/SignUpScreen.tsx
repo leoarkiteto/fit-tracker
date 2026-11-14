@@ -16,7 +16,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { useNavigation } from "@react-navigation/native";
 import { NativeStackNavigationProp } from "@react-navigation/native-stack";
 
-import { Input, Button } from "../components";
+import { Input, Button, SocialLoginButtons } from "../components";
 import { colors, spacing, borderRadius, typography } from "../theme";
 import { useAuth } from "../context/AuthContext";
 
@@ -204,6 +204,8 @@ export const SignUpScreen: React.FC = () => {
               }
             />
           </View>
+
+          <SocialLoginButtons />
 
           {/* Footer */}
           <View style={styles.footer}>

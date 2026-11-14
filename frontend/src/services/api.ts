@@ -134,6 +134,20 @@ export const setAuthToken = (token: string | null) => {
 
 export const getAuthToken = () => currentToken;
 
+// Erro HTTP da API; `serverMessage` é o corpo da resposta sem espaços nas pontas
+export class ApiError extends Error {
+  status: number;
+  serverMessage: string;
+
+  constructor(status: number, errorText: string) {
+    super(`API Error ${status}: ${errorText}`);
+    this.name = "ApiError";
+    this.status = status;
+    this.serverMessage = errorText.trim();
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
+
 // Helper para fazer requisições
 async function fetchApi<T>(
   endpoint: string,
@@ -159,7 +173,7 @@ async function fetchApi<T>(
 
   if (!response.ok) {
     const errorText = await response.text();
-    throw new Error(`API Error ${response.status}: ${errorText}`);
+    throw new ApiError(response.status, errorText);
   }
 
   // Se for DELETE com 204, não há body
@@ -573,6 +587,17 @@ export const healthApi = {
 
 // ============= Auth API =============
 
+const convertApiAuth = (data: ApiAuthResponse): AuthResult => ({
+  token: data.token,
+  expiresAt: new Date(data.expiresAt),
+  user: {
+    id: data.user.id,
+    email: data.user.email,
+    name: data.user.name,
+    profileId: data.user.profileId,
+  },
+});
+
 export const authApi = {
   register: async (
     email: string,
@@ -618,6 +643,38 @@ export const authApi = {
         profileId: data.user.profileId,
       },
     };
+  },
+
+  loginWithGoogle: async (idToken: string): Promise<AuthResult> => {
+    const data = await fetchApi<ApiAuthResponse>(
+      "/api/auth/oauth/google",
+      {
+        method: "POST",
+        body: JSON.stringify({ idToken }),
+      },
+      false
+    );
+    return convertApiAuth(data);
+  },
+
+  loginWithGitHub: async (params: {
+    code: string;
+    codeVerifier: string;
+    redirectUri: string;
+  }): Promise<AuthResult> => {
+    const data = await fetchApi<ApiAuthResponse>(
+      "/api/auth/oauth/github",
+      {
+        method: "POST",
+        body: JSON.stringify({
+          code: params.code,
+          codeVerifier: params.codeVerifier,
+          redirectUri: params.redirectUri,
+        }),
+      },
+      false
+    );
+    return convertApiAuth(data);
   },
 
   getCurrentUser: async (): Promise<AuthUser> => {
@@ -677,7 +734,7 @@ export const authApi = {
     newPassword: string
   ): Promise<void> => {
     await fetchApi("/api/auth/change-password", {
-      method: "POST",
+      method: "PATCH",
       body: JSON.stringify({ currentPassword, newPassword }),
     });
   },

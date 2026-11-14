@@ -68,6 +68,72 @@ var (
 	ErrPasswordTooShort = apperror.BadRequest("A senha deve ter pelo menos 6 caracteres")
 )
 
+// Identity providers supported for social login.
+const (
+	ProviderGoogle = "google"
+	ProviderGitHub = "github"
+)
+
+// NoPasswordHash marks a Conta sem senha (ADR docs/adr/0002-conta-sem-senha-por-marcador.md).
+// Only the domain and the SQLite adapters may reference it; every other layer
+// must use IsPasswordless or (*User).HasPassword.
+const NoPasswordHash = ""
+
+// IsPasswordless reports whether hash is the marker of a Conta sem senha.
+func IsPasswordless(hash string) bool { return hash == NoPasswordHash }
+
+// HasPassword reports whether the account can sign in with a password. The
+// account must carry its stored hash (as returned by Repository.GetByEmail).
+func (u *User) HasPassword() bool { return !IsPasswordless(u.PasswordHash) }
+
+// ProviderIdentity is what a Provedor de identidade vouches for.
+type ProviderIdentity struct {
+	Provider      string // ProviderGoogle | ProviderGitHub
+	Subject       string // Google "sub", GitHub numeric id as string
+	Email         string // "" when the provider has none
+	EmailVerified bool
+	Name          string // Google "name"; GitHub "name"
+	Login         string // GitHub "login"; "" for Google
+}
+
+// LinkedIdentity is a stored Identidade vinculada.
+type LinkedIdentity struct {
+	CreatedAt time.Time
+	UserID    string
+	Provider  string
+	Subject   string
+}
+
+// ProviderLabel is the display name of a provider.
+func ProviderLabel(provider string) string {
+	switch provider {
+	case ProviderGoogle:
+		return "Google"
+	case ProviderGitHub:
+		return "GitHub"
+	}
+	return provider
+}
+
+// ErrSocialUnavailable is returned when the provider is not configured.
+func ErrSocialUnavailable(provider string) *apperror.Error {
+	return apperror.ServiceUnavailable("Login com " + ProviderLabel(provider) + " indisponível.")
+}
+
+// ErrSocialNoVerifiedEmail is returned when the provider account has no verified email.
+func ErrSocialNoVerifiedEmail(provider string) *apperror.Error {
+	return apperror.New(http.StatusForbidden,
+		"Não foi possível entrar: sua conta "+ProviderLabel(provider)+" não tem um e-mail verificado.")
+}
+
+// ErrSocialLoginFailed is the generic social login failure.
+func ErrSocialLoginFailed(provider string) *apperror.Error {
+	return apperror.Unauthorized("Não foi possível entrar com " + ProviderLabel(provider) + ". Tente novamente.")
+}
+
+// ErrNoPassword is returned when changing the password of a Conta sem senha.
+var ErrNoPassword = apperror.BadRequest("Sua conta não tem senha; use Esqueci minha senha")
+
 // Domain errors. The messages are part of the API contract the mobile client
 // displays, so they are defined next to the domain rather than in the handler.
 var (

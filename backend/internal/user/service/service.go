@@ -17,6 +17,21 @@ type Service struct {
 	signer   *auth.Signer
 	now      func() time.Time
 	resetKey []byte
+
+	// Social login ports; nil until WithSocialLogin is called.
+	identities user.IdentityRepository
+	google     user.GoogleVerifier
+	github     user.GitHubExchanger
+}
+
+// WithSocialLogin enables social login. Any nil argument leaves the matching
+// provider unavailable.
+func (s *Service) WithSocialLogin(identities user.IdentityRepository, google user.GoogleVerifier,
+	github user.GitHubExchanger) *Service {
+	s.identities = identities
+	s.google = google
+	s.github = github
+	return s
 }
 
 // New builds the account service. resetKey is the HMAC key under which reset

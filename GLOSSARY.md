@@ -20,3 +20,20 @@ _Evitar_: "token", "senha temporária".
 
 **Intervalo de reenvio** (Resend Cooldown)
 Tempo mínimo de 60 segundos entre dois Pedidos de redefinição para o mesmo e-mail. Um pedido feito dentro do intervalo não gera um novo Código de redefinição; o anterior continua valendo.
+
+**Login social** (Social Sign-In)
+Entrar no FitTracker com uma conta pessoal de um Provedor de identidade, em vez de e-mail e senha. Na primeira vez, cria a conta ou a vincula a uma conta existente com o mesmo E-mail verificado; nas seguintes, a pessoa é reconhecida pela Identidade vinculada, e o e-mail do provedor não altera a conta.
+_Evitar_: "SSO" (reservado para login único corporativo, que o FitTracker não oferece).
+
+**Provedor de identidade** (Identity Provider)
+Serviço externo que atesta quem a pessoa é, para que ela entre no FitTracker sem digitar a senha do FitTracker. Hoje: Google e GitHub. O provedor só prova a identidade; a sessão continua sendo do FitTracker.
+
+**Identidade vinculada** (Linked Identity)
+Associação permanente entre uma conta do FitTracker e uma conta em um Provedor de identidade, identificada pelo provedor e pelo identificador que ele dá à pessoa. Cada conta de provedor pertence a no máximo uma conta do FitTracker; uma conta do FitTracker pode ter várias Identidades vinculadas.
+
+**E-mail verificado** (Verified Email)
+E-mail que o Provedor de identidade afirma pertencer à pessoa. Só um E-mail verificado permite criar uma conta ou vincular uma Identidade a uma conta existente.
+_Evitar_: "e-mail confirmado" quando a confirmação foi feita pelo FitTracker.
+
+**Conta sem senha** (Password-less Account)
+Conta sem senha do FitTracker: criada pelo Login social, ou que perdeu a senha ao ser vinculada automaticamente a uma Identidade. Só entra pelo provedor, até definir uma senha pela Recuperação de senha. A Troca de senha não se aplica a ela.

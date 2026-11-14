@@ -25,6 +25,10 @@ func (s *Service) ChangePassword(ctx context.Context, userID, currentPassword, n
 		return user.ErrUserNotFound
 	}
 
+	if user.IsPasswordless(currentHash) {
+		return user.ErrNoPassword
+	}
+
 	if !auth.CheckPasswordHash(currentPassword, currentHash) {
 		return user.ErrCurrentPasswordMismatch
 	}

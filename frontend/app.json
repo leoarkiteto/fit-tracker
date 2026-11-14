@@ -3,6 +3,7 @@
     "name": "FitTracker",
     "slug": "FitTracker",
     "version": "1.0.0",
+    "scheme": "fittracker",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
     "userInterfaceStyle": "light",

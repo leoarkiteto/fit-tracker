@@ -23,6 +23,20 @@ const getBaseUrl = () => {
 
 export const API_BASE_URL = getBaseUrl();
 
+// Expo substitui `process.env.EXPO_PUBLIC_*` em tempo de build; o tsconfig do
+// projeto não inclui os tipos do Node, então declaramos só o que usamos.
+declare const process: { env: Record<string, string | undefined> };
+
+// Login social: apenas client IDs públicos (nenhum segredo no app).
+// O client secret do GitHub fica somente no backend.
+export const SOCIAL_AUTH = {
+  googleWebClientId:
+    process.env.EXPO_PUBLIC_GOOGLE_WEB_CLIENT_ID || undefined,
+  googleIosClientId:
+    process.env.EXPO_PUBLIC_GOOGLE_IOS_CLIENT_ID || undefined,
+  githubClientId: process.env.EXPO_PUBLIC_GITHUB_CLIENT_ID || undefined,
+};
+
 export const API_ENDPOINTS = {
   // Health
   health: "/health",

@@ -16,7 +16,9 @@ import { useNavigation } from "@react-navigation/native";
 
 import { Input, Button } from "../components";
 import { colors, spacing, borderRadius, typography } from "../theme";
-import { authApi } from "../services/api";
+import { authApi, ApiError } from "../services/api";
+
+const NO_PASSWORD_MESSAGE = "Sua conta não tem senha; use Esqueci minha senha";
 
 export const ChangePasswordScreen: React.FC = () => {
   const navigation = useNavigation();
@@ -69,7 +71,13 @@ export const ChangePasswordScreen: React.FC = () => {
     } catch (error) {
       const message =
         error instanceof Error ? error.message : "Erro ao alterar senha";
-      if (message.includes("400")) {
+      if (
+        error instanceof ApiError &&
+        error.status === 400 &&
+        error.serverMessage === NO_PASSWORD_MESSAGE
+      ) {
+        Alert.alert("Erro", error.serverMessage);
+      } else if (message.includes("400")) {
         Alert.alert("Erro", "Senha atual incorreta");
       } else {
         Alert.alert("Erro", "Não foi possível alterar a senha. Tente novamente.");

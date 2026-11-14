@@ -21,6 +21,11 @@ func (s *Service) Login(ctx context.Context, email, password string) (*user.Auth
 		return nil, user.ErrInvalidCredentials
 	}
 
+	// A Conta sem senha answers like a wrong password (NFR-5).
+	if !account.HasPassword() {
+		return nil, user.ErrInvalidCredentials
+	}
+
 	if !auth.CheckPasswordHash(password, account.PasswordHash) {
 		return nil, user.ErrInvalidCredentials
 	}

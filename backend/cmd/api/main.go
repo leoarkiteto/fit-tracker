@@ -4,6 +4,7 @@ import (
 	"log"
 	"net/http"
 	"os"
+	"strings"
 
 	aihandler "fittracker-api/internal/aiplanning/handler"
 	aiinfra "fittracker-api/internal/aiplanning/infrastructure"
@@ -17,6 +18,7 @@ import (
 	profilehandler "fittracker-api/internal/profile/handler"
 	profileinfra "fittracker-api/internal/profile/infrastructure"
 	profileservice "fittracker-api/internal/profile/service"
+	"fittracker-api/internal/user"
 	userhandler "fittracker-api/internal/user/handler"
 	userinfra "fittracker-api/internal/user/infrastructure"
 	userservice "fittracker-api/internal/user/service"
@@ -30,6 +32,17 @@ import (
 	"fittracker-api/pkg/database"
 	"fittracker-api/pkg/httpx"
 )
+
+// splitList splits a comma-separated value, trimming each item and dropping empties.
+func splitList(value string) []string {
+	var items []string
+	for _, item := range strings.Split(value, ",") {
+		if item = strings.TrimSpace(item); item != "" {
+			items = append(items, item)
+		}
+	}
+	return items
+}
 
 func main() {
 	// 1. Infrastructure: the database and the token signer (JWT_SECRET is
@@ -56,13 +69,35 @@ func main() {
 	mux := http.NewServeMux()
 
 	// User slice
-	userhandler.Router(mux, signer, userservice.New(
+	userSvc := userservice.New(
 		userinfra.NewUserRepository(db),
 		userinfra.NewPasswordResetRepository(db),
 		userinfra.NewLogMailer(),
 		signer,
 		resetKey,
-	))
+	)
+
+	// Social login providers are optional: each stays a nil interface (and its
+	// endpoint answers 503) unless fully configured.
+	var google user.GoogleVerifier
+	if ids := splitList(os.Getenv("GOOGLE_CLIENT_IDS")); len(ids) > 0 {
+		google = userinfra.NewGoogleVerifier(ids)
+		log.Println("Social login: Google enabled")
+	} else {
+		log.Println("Social login: Google disabled (GOOGLE_CLIENT_IDS not set)")
+	}
+
+	var github user.GitHubExchanger
+	githubID := strings.TrimSpace(os.Getenv("GITHUB_CLIENT_ID"))
+	githubSecret := strings.TrimSpace(os.Getenv("GITHUB_CLIENT_SECRET"))
+	if githubID != "" && githubSecret != "" {
+		github = userinfra.NewGitHubExchanger(githubID, githubSecret)
+		log.Println("Social login: GitHub enabled")
+	} else {
+		log.Println("Social login: GitHub disabled (GITHUB_CLIENT_ID/GITHUB_CLIENT_SECRET not set)")
+	}
+
+	userhandler.Router(mux, signer, userSvc.WithSocialLogin(userinfra.NewIdentityRepository(db), google, github))
 
 	// Profile slice
 	profilehandler.Router(mux, signer, profileservice.New(profileinfra.NewProfileRepository(db)))

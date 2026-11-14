@@ -18,6 +18,12 @@ interface AuthContextType {
   isLoading: boolean;
   signIn: (email: string, password: string) => Promise<void>;
   signUp: (email: string, password: string, name: string) => Promise<void>;
+  signInWithGoogle: (idToken: string) => Promise<void>;
+  signInWithGitHub: (params: {
+    code: string;
+    codeVerifier: string;
+    redirectUri: string;
+  }) => Promise<void>;
   signOut: () => Promise<void>;
   refreshAuth: () => Promise<void>;
 }
@@ -95,6 +101,19 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
     []
   );
 
+  const signInWithGoogle = useCallback(async (idToken: string) => {
+    const result = await authApi.loginWithGoogle(idToken);
+    await saveAuth(result);
+  }, []);
+
+  const signInWithGitHub = useCallback(
+    async (params: { code: string; codeVerifier: string; redirectUri: string }) => {
+      const result = await authApi.loginWithGitHub(params);
+      await saveAuth(result);
+    },
+    []
+  );
+
   const signOut = useCallback(async () => {
     await clearAuth();
   }, []);
@@ -116,6 +135,8 @@ export const AuthProvider: React.FC<{ children: ReactNode }> = ({
         isLoading,
         signIn,
         signUp,
+        signInWithGoogle,
+        signInWithGitHub,
         signOut,
         refreshAuth,
       }}

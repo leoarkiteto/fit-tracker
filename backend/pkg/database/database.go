@@ -73,6 +73,17 @@ func createSchema(db *sql.DB) {
 		FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
 	);
 
+	CREATE TABLE IF NOT EXISTS UserIdentities (
+		provider TEXT NOT NULL,
+		subject TEXT NOT NULL,
+		user_id TEXT NOT NULL,
+		created_at DATETIME NOT NULL,
+		PRIMARY KEY (provider, subject),
+		FOREIGN KEY (user_id) REFERENCES Users(id) ON DELETE CASCADE
+	);
+
+	CREATE INDEX IF NOT EXISTS idx_user_identities_user_id ON UserIdentities(user_id);
+
 	CREATE TABLE IF NOT EXISTS Workouts (
 		id TEXT PRIMARY KEY,
 		name TEXT NOT NULL,

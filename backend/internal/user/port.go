@@ -21,6 +21,34 @@ type PasswordResetRepository interface {
 	MarkUsed(ctx context.Context, userID, codeHash string, at time.Time) (won bool, err error)
 }
 
+// IdentityRepository is the outbound port for linked identities.
+type IdentityRepository interface {
+	// FindUserByIdentity loads the account linked to (provider, subject).
+	FindUserByIdentity(ctx context.Context, provider, subject string) (*User, bool, error)
+	// FindUsersByEmailFold returns every account whose email equals email, ignoring case.
+	FindUsersByEmailFold(ctx context.Context, email string) ([]User, error)
+	// CreateWithIdentity inserts profile + password-less account + identity in one
+	// transaction. u.ProfileID must be set; u.Email is stored as given.
+	CreateWithIdentity(ctx context.Context, u *User, identity LinkedIdentity) error
+	// LinkIdentity atomically inserts identity, lowercases the account email and,
+	// if the account has a password, clears it (NoPasswordHash) and deletes its
+	// reset codes. All or nothing.
+	LinkIdentity(ctx context.Context, identity LinkedIdentity) error
+}
+
+// GoogleVerifier is the outbound port that validates Google ID tokens.
+type GoogleVerifier interface {
+	// Verify validates an ID token and returns the identity it vouches for.
+	Verify(ctx context.Context, idToken string) (*ProviderIdentity, error)
+}
+
+// GitHubExchanger is the outbound port that resolves a GitHub authorization code.
+type GitHubExchanger interface {
+	// Exchange trades an authorization code (PKCE) for the user's identity.
+	// Email/EmailVerified come from the primary+verified entry of /user/emails.
+	Exchange(ctx context.Context, code, codeVerifier, redirectURI string) (*ProviderIdentity, error)
+}
+
 // Mailer is the outbound port that delivers reset codes to the account email.
 type Mailer interface {
 	SendPasswordResetCode(ctx context.Context, email, code string) error
